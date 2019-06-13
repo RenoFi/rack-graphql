@@ -1,4 +1,4 @@
-RSpec.describe "/graphql request for regular execute", type: :request do
+RSpec.describe '/graphql request for regular execute', type: :request do
   let(:query) do
     %|{
       result: health {
@@ -11,53 +11,53 @@ RSpec.describe "/graphql request for regular execute", type: :request do
 
   let(:params) do
     {
-      "query" => query,
-      "variables" => variables
+      'query' => query,
+      'variables' => variables
     }
   end
 
-  describe "valid params" do
+  describe 'valid params' do
     before do
-      post "/graphql", MultiJson.dump(params)
+      post '/graphql', MultiJson.dump(params)
     end
 
     it do
       expect(last_response.status).to eq(200)
-      expect(json_response["data"]["result"]["status"]).to eq("ok")
+      expect(json_response['data']['result']['status']).to eq('ok')
     end
   end
 
-  describe "variables are hash" do
-    let(:variables) { { foo: "bar" } }
+  describe 'variables are hash' do
+    let(:variables) { { foo: 'bar' } }
 
     before do
-      post "/graphql", MultiJson.dump(params)
+      post '/graphql', MultiJson.dump(params)
     end
 
     it do
       expect(last_response.status).to eq(200)
-      expect(json_response["data"]["result"]["status"]).to eq("ok")
+      expect(json_response['data']['result']['status']).to eq('ok')
     end
   end
 
-  describe "variables are empty string" do
-    let(:variables) { "" }
+  describe 'variables are empty string' do
+    let(:variables) { '' }
 
     before do
-      post "/graphql", MultiJson.dump(params)
+      post '/graphql', MultiJson.dump(params)
     end
 
     it do
       expect(last_response.status).to eq(200)
-      expect(json_response["data"]["result"]["status"]).to eq("ok")
+      expect(json_response['data']['result']['status']).to eq('ok')
     end
   end
 
-  describe "variables are invalid json" do
-    let(:variables) { "!@#asdf" }
+  describe 'variables are invalid json' do
+    let(:variables) { '!@#asdf' }
 
     before do
-      post "/graphql", MultiJson.dump(params)
+      post '/graphql', MultiJson.dump(params)
     end
 
     it do
@@ -65,11 +65,11 @@ RSpec.describe "/graphql request for regular execute", type: :request do
     end
   end
 
-  describe "variables are unsupported type" do
+  describe 'variables are unsupported type' do
     let(:variables) { 1 }
 
     before do
-      post "/graphql", MultiJson.dump(params)
+      post '/graphql', MultiJson.dump(params)
     end
 
     it do
@@ -77,9 +77,9 @@ RSpec.describe "/graphql request for regular execute", type: :request do
     end
   end
 
-  describe "get request" do
+  describe 'get request' do
     before do
-      get "/graphql", MultiJson.dump(params)
+      get '/graphql', MultiJson.dump(params)
     end
 
     it do
@@ -87,9 +87,9 @@ RSpec.describe "/graphql request for regular execute", type: :request do
     end
   end
 
-  describe "put request" do
+  describe 'put request' do
     before do
-      put "/graphql", MultiJson.dump(params)
+      put '/graphql', MultiJson.dump(params)
     end
 
     it do
@@ -97,16 +97,16 @@ RSpec.describe "/graphql request for regular execute", type: :request do
     end
   end
 
-  describe "invalid params" do
+  describe 'invalid params' do
     before do
-      post "/graphql", params: "!asdf#"
+      post '/graphql', params: '!asdf#'
     end
 
     it do
       expect(last_response.status).to eq(200)
-      expect(json_response["errors"]).not_to be_nil
-      expect(json_response["errors"]).not_to be_empty
-      expect(json_response["errors"][0]["message"]).to eq("No query string was present")
+      expect(json_response['errors']).not_to be_nil
+      expect(json_response['errors']).not_to be_empty
+      expect(json_response['errors'][0]['message']).to eq('No query string was present')
     end
   end
 end

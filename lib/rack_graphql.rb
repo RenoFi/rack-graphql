@@ -1,1 +1,1 @@
-require "rack_graphql"
+require 'rack-graphql'

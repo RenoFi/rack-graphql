@@ -1,7 +1,7 @@
-require "bundler/setup"
-require "pry"
-require "rack-graphql"
-require "rack/test"
+require 'bundler/setup'
+require 'pry'
+require 'rack-graphql'
+require 'rack/test'
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
@@ -23,7 +23,7 @@ end
 
 class TestQueryType < GraphQL::Schema::Object
   field :health, HealthResponseType, null: true do
-    description "Static endpoint used for testing purposes"
+    description 'Static endpoint used for testing purposes'
   end
 
   def health
@@ -35,15 +35,10 @@ class TestSchema < GraphQL::Schema
   query TestQueryType
 end
 
-class TestContextHandler
-  def self.call(env)
-  end
-end
-
 def app
   RackGraphql::Application.call(
     schema: TestSchema,
-    context_handler: TestContextHandler
+    context_handler: ->(env) { { meat: 'steak' } }
   )
 end
 

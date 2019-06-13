@@ -22,7 +22,7 @@ module RackGraphql
         app_name: app_name,
         env:      ENV['RACK_ENV'],
         host:     ENV['HOSTNAME'],
-        revision: ENV['REVISION'],
+        revision: ENV['REVISION']
       )
     end
   end

@@ -9,19 +9,15 @@ module RackGraphql
       return [406, {}, []] unless post_request?(env)
 
       params         = post_data(env)
-      variables      = ensure_hash(params["variables"])
-      operation_name = params["operationName"]
+      variables      = ensure_hash(params['variables'])
+      operation_name = params['operationName']
       context        = context_handler.call(env)
 
-      result = if valid_multiplex?(params)
-        execute_multi(params["_json"], operation_name: operation_name, variables: variables, context: context)
-      else
-        execute_single(params["query"], operation_name: operation_name, variables: variables, context: context)
-      end
+      result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
 
       [200, response_headers(result), [MultiJson.dump(result)]]
     rescue ArgumentError
-      [400, { "Content-Type" => "application/json" }, [MultiJson.dump({})]]
+      [400, { 'Content-Type' => 'application/json' }, [MultiJson.dump({})]]
     ensure
       ActiveRecord::Base.clear_active_connections! if defined?(ActiveRecord::Base)
     end
@@ -31,11 +27,11 @@ module RackGraphql
     attr_reader :schema, :context_handler
 
     def post_request?(env)
-      env["REQUEST_METHOD"] == "POST"
+      env['REQUEST_METHOD'] == 'POST'
     end
 
     def post_data(env)
-      ::MultiJson.load(env["rack.input"].gets)
+      ::MultiJson.load(env['rack.input'].gets)
     rescue MultiJson::ParseError
       {}
     end
@@ -56,7 +52,15 @@ module RackGraphql
       when nil
         {}
       else
-        fail ArgumentError, "Unexpected parameter: #{ambiguous_param}"
+        raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
+      end
+    end
+
+    def execute(params:, operation_name:, variables:, context:)
+      if valid_multiplex?(params)
+        execute_multi(params['_json'], operation_name: operation_name, variables: variables, context: context)
+      else
+        execute_single(params['query'], operation_name: operation_name, variables: variables, context: context)
       end
     end
 
@@ -65,13 +69,13 @@ module RackGraphql
     end
 
     def valid_multiplex?(params)
-      params["_json"].is_a?(Array) && params["_json"].all? { |j| j.is_a?(Hash) }
+      params['_json'].is_a?(Array) && params['_json'].all? { |j| j.is_a?(Hash) }
     end
 
     def execute_multi(queries_params, operation_name:, variables:, context:)
       queries = queries_params.map do |param|
         {
-          query: param["query"],
+          query: param['query'],
           operation_name: operation_name,
           variables: variables,
           context: context
@@ -83,13 +87,17 @@ module RackGraphql
 
     def response_headers(result = nil)
       {
-        "Access-Control-Expose-Headers" => "X-Subscription-ID",
-        "Content-Type" => "application/json"
+        'Access-Control-Expose-Headers' => 'X-Subscription-ID',
+        'Content-Type' => 'application/json'
       }.tap do |headers|
-        if result.is_a?(GraphQL::Query::Result) && result.subscription?
-          headers["X-Subscription-ID"] = result.context[:subscription_id]
-        end
+        headers['X-Subscription-ID'] = result.context[:subscription_id] if result_subscription?(result)
       end
+    end
+
+    def result_subscription?(result)
+      return false unless result.is_a?(GraphQL::Query::Result)
+
+      result.subscription?
     end
   end
 end
