@@ -11,8 +11,7 @@ Layout/AlignHash:
   Enabled: false
 
 Naming/FileName:
-  Exclude:
-    - '**/rack-graphql.rb'
+  Enabled: false
 
 Metrics/BlockLength:
   Max: 30
