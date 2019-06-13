@@ -18,6 +18,8 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     rack (2.0.7)
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
     rake (10.5.0)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
@@ -38,8 +40,9 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.0)
-  pry
+  pry (~> 0.12)
   rack-graphql!
+  rack-test (~> 1.1)
   rake (~> 10.0)
   rspec (~> 3.0)
 

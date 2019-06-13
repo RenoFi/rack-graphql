@@ -1,6 +1,7 @@
 require "bundler/setup"
 require "pry"
 require "rack-graphql"
+require "rack/test"
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
@@ -12,21 +13,43 @@ RSpec.configure do |config|
   config.define_derived_metadata do |meta|
     meta[:aggregate_failures] = true
   end
+
+  config.include Rack::Test::Methods, type: :request
 end
 
-class FruitType < GraphQL::Schema::Object
-  field :id, ID, null: false
-  field :name, String, null: false
+class HealthResponseType < GraphQL::Schema::Object
+  field :status, String, null: false
 end
 
 class TestQueryType < GraphQL::Schema::Object
-  field :fruits, [FruitType], null: true
+  field :health, HealthResponseType, null: true do
+    description "Static endpoint used for testing purposes"
+  end
 
-  def fruits(page: nil, limit: nil)
-    (0..10).map { |i| OpenStruct.new(id: SecureRandom.uuid, name: "Banana #{i}") }
+  def health
+    OpenStruct.new(status: :ok)
   end
 end
 
 class TestSchema < GraphQL::Schema
   query TestQueryType
+end
+
+class TestContextHandler
+  def self.call(env)
+  end
+end
+
+def app
+  RackGraphql::Application.call(
+    schema: TestSchema,
+    context_handler: TestContextHandler
+  )
+end
+
+def json_response
+  MultiJson.load(last_response.body)
+rescue
+  puts last_response.inspect
+  raise
 end
