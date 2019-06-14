@@ -5,7 +5,7 @@
 
 `rack-graphql` is designed to build ruby services with graphql api. It provides `/graphql` endpoint and can handle [subscriptions](https://graphql-ruby.org/guides#subscriptions-guides) and [multiplex](https://graphql-ruby.org/queries/multiplex.html).
 
-It works on pure rack and none of `ActionController`/`ActionDispatch`/`ActionPack` or `Sinatra` is required. By default it provides health route on `/health` and `/`, which can be disabled.
+It works on pure rack and none of `ActionController`/`ActionDispatch`/`ActionPack` or `Sinatra` is required.
 
 It can be used together with rails to not make graphql requests be routed with `ActionDispatch` or more pure ruby apps.
 
@@ -23,10 +23,8 @@ Add following to your `config.ru` file:
 
 ```ruby
 run RackGraphql::Application.call(
-  schema: YourGraqphqlSchema,                 # required
-  app_name: 'your-service-name',              # optional, used for health endpoint content
-  context_handler: YourGraphqlContextHandler, # optional, empty `proc` by default
-  health_route: true,                         # optional, true by default
+  schema: YourGraqphqlSchema,                # required
+  context_handler: YourGraphqlContextHandler # optional, empty `proc` by default
 )
 ```
 
