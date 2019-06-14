@@ -3,9 +3,11 @@
 
 # rack-graphql
 
-Rack middleware implementing graphql endpoint for ruby (non-`ActionController`) services. It uses pure rack and none of `ActionController` or `Sinatra` is required. By default it implements health route on `/health` and `/`, since it's only expected to be used on graphql-only services.
+`rack-graphql` is designed to build ruby services with graphql api. It provides `/graphql` endpoint and can handle [subscriptions](https://graphql-ruby.org/guides#subscriptions-guides) and [multiplex](https://graphql-ruby.org/queries/multiplex.html).
 
-It also handles [subscriptions](https://graphql-ruby.org/guides#subscriptions-guides) and [multiplex](https://graphql-ruby.org/queries/multiplex.html).
+It works on pure rack and none of `ActionController`/`ActionDispatch`/`ActionPack` or `Sinatra` is required. By default it provides health route on `/health` and `/`, which can be disabled.
+
+It can be used together with rails to not make graphql requests be routed with `ActionDispatch` or more pure ruby apps.
 
 ## Installation
 
@@ -17,18 +19,18 @@ gem 'rack-graphql'
 
 ## Usage example
 
-Add to your `config.ru` file
+Add following to your `config.ru` file:
 
 ```ruby
-run RackGraphql::Application.call(                    
+run RackGraphql::Application.call(
   schema: YourGraqphqlSchema,                 # required
-  app_name: 'your-service-name',              # optional, used for health route
-  context_handler: YourGraphqlContextHandler, # optional, empty proc by default
-  health_route: true,                     # optional, true by default
+  app_name: 'your-service-name',              # optional, used for health endpoint content
+  context_handler: YourGraphqlContextHandler, # optional, empty `proc` by default
+  health_route: true,                         # optional, true by default
 )
 ```
 
-`context_handler` can be a class, object or proc. It only must respond to `call` merhod taking `env` as an argument. It is supposed to decode request properties to graphql context (eg. jwt token to user object, as shown below).
+`context_handler` can be a class, object or proc. It must respond to `call` method taking `env` as an argument. It is supposed to decode or transform request properties to graphql context (eg. jwt token to user object, as shown on an example below).
 
 ### Example: using context handler for JWT authentication
 
@@ -61,7 +63,7 @@ class GraphqlContextHandler
       return unless payload
       return unless payload['user_id']
 
-      UserRepo.find_by_id(payload['user_id])
+      UserRepo.find_by_id(payload['user_id'])
     end
   end
 end
