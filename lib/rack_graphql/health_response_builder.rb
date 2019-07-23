@@ -1,7 +1,8 @@
 module RackGraphql
   class HealthResponseBuilder
-    def initialize(app_name:)
+    def initialize(app_name:, env: {})
       @app_name = app_name
+      @env = env
     end
 
     def build
@@ -10,7 +11,7 @@ module RackGraphql
 
     private
 
-    attr_reader :app_name
+    attr_reader :app_name, :env
 
     def headers
       { 'Content-Type' => 'application/json' }
