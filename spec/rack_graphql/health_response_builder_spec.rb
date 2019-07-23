@@ -7,7 +7,7 @@ RSpec.describe RackGraphql::HealthResponseBuilder do
     it do
       expect(subject[0]).to eq(200)
       expect(subject[1]).to eq('Content-Type' => 'application/json')
-      expect(body.keys).to match_array(%w[status app_name env host revision])
+      expect(body.keys).to match_array(%w[status app_name app_env host revision request_ip])
     end
   end
 end
