@@ -15,7 +15,7 @@ module RackGraphql
 
       result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
 
-      [200, response_headers(result), [MultiJson.dump(result)]]
+      [200, response_headers(result), [response_body(result)]]
     rescue ArgumentError
       [400, { 'Content-Type' => 'application/json' }, [MultiJson.dump({})]]
     ensure
@@ -92,6 +92,18 @@ module RackGraphql
       }.tap do |headers|
         headers['X-Subscription-ID'] = result.context[:subscription_id] if result_subscription?(result)
       end
+    end
+
+    def response_body(result = nil)
+      if result_subscription?(result)
+        body = result.to_h
+        body["data"] ||= {}
+        body["data"][result.query.operation_name] ||= nil
+        body["data"]["subscriptionId"] = result.context[:subscription_id]
+      else
+        body = result
+      end
+      MultiJson.dump(body)
     end
 
     def result_subscription?(result)
