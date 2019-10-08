@@ -8,7 +8,10 @@ module RackGraphql
     def call(env)
       return [406, {}, []] unless post_request?(env)
 
-      params         = post_data(env)
+      params = post_data(env)
+
+      return [400, {}, []] unless params.is_a?(Hash)
+
       variables      = ensure_hash(params['variables'])
       operation_name = params['operationName']
       context        = context_handler.call(env)
@@ -33,7 +36,7 @@ module RackGraphql
     def post_data(env)
       ::MultiJson.load(env['rack.input'].gets)
     rescue MultiJson::ParseError
-      {}
+      nil
     end
 
     # Handle form data, JSON body, or a blank value

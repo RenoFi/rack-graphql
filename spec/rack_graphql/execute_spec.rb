@@ -97,9 +97,29 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     end
   end
 
-  describe 'invalid params' do
+  describe 'non-hash body' do
+    before do
+      post '/graphql', MultiJson.dump('!asdf#')
+    end
+
+    it do
+      expect(last_response.status).to eq(400)
+    end
+  end
+
+  describe 'non-json body' do
     before do
       post '/graphql', params: '!asdf#'
+    end
+
+    it do
+      expect(last_response.status).to eq(400)
+    end
+  end
+
+  describe 'empty params' do
+    before do
+      post '/graphql', MultiJson.dump({})
     end
 
     it do

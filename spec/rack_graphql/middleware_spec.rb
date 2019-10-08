@@ -1,7 +1,7 @@
 RSpec.describe RackGraphql::Middleware do
   describe '.call' do
     let(:context_handler) { ->(env) { { bacon: 'steak', env: env } } }
-    let(:env) { { 'rack.input' => double(gets: nil), 'REQUEST_METHOD' => request_method } }
+    let(:env) { { 'rack.input' => double(gets: MultiJson.dump({})), 'REQUEST_METHOD' => request_method } }
 
     subject { described_class.new(schema: GraphQL::Schema, context_handler: context_handler).call(env) }
 
