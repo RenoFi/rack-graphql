@@ -22,16 +22,17 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.4'
+  spec.required_ruby_version = '>= 2.5'
 
   spec.add_dependency 'graphql', '>= 1.9.0'
   spec.add_dependency 'multi_json'
   spec.add_dependency 'rack', '>= 2.0.0'
 
-  spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'pry', '~> 0.12'
-  spec.add_development_dependency 'rack-test', '~> 1.1'
-  spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 0.71'
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'rack-test'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop-performance'
 end

@@ -1,10 +1,8 @@
 module RackGraphql
   class Application
-    def self.call(schema:,
-                  app_name: 'rack-graphql-service',
-                  context_handler: nil,
-                  health_route: true,
-                  health_response_builder: RackGraphql::HealthResponseBuilder)
+    def self.call(schema:, app_name: 'rack-graphql-service', context_handler: nil,
+      health_route: true, health_response_builder: RackGraphql::HealthResponseBuilder)
+
       ::Rack::Builder.new do
         map '/graphql' do
           run RackGraphql::Middleware.new(schema: schema, context_handler: context_handler)

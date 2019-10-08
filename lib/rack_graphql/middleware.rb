@@ -55,7 +55,7 @@ module RackGraphql
       when nil
         {}
       else
-        raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
+        fail ArgumentError, "Unexpected parameter: #{ambiguous_param}"
       end
     end
 
