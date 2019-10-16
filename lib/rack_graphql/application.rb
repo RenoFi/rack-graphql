@@ -13,6 +13,11 @@ module RackGraphql
             run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
           end
 
+          map '/healthz' do
+            run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
+          end
+
+
           map '/' do
             run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
           end
