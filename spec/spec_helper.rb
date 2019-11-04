@@ -43,7 +43,7 @@ def app
 end
 
 def json_response
-  MultiJson.load(last_response.body)
+  Oj.load(last_response.body)
 rescue
   puts last_response.inspect
   raise

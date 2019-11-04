@@ -20,7 +20,7 @@ module RackGraphql
 
       [200, response_headers(result), [response_body(result)]]
     rescue ArgumentError
-      [400, { 'Content-Type' => 'application/json' }, [MultiJson.dump({})]]
+      [400, { 'Content-Type' => 'application/json' }, [Oj.dump({})]]
     ensure
       ActiveRecord::Base.clear_active_connections! if defined?(ActiveRecord::Base)
     end
@@ -34,8 +34,8 @@ module RackGraphql
     end
 
     def post_data(env)
-      ::MultiJson.load(env['rack.input'].gets)
-    rescue MultiJson::ParseError
+      ::Oj.load(env['rack.input'].gets)
+    rescue Oj::ParseError
       nil
     end
 
@@ -46,8 +46,8 @@ module RackGraphql
         return {} if ambiguous_param.empty?
 
         begin
-          ensure_hash(::MultiJson.load(ambiguous_param))
-        rescue MultiJson::ParseError
+          ensure_hash(Oj.load(ambiguous_param))
+        rescue Oj::ParseError
           raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
         end
       when Hash
@@ -103,10 +103,12 @@ module RackGraphql
         body["data"] ||= {}
         body["data"][result.query.operation_name] ||= nil
         body["data"]["subscriptionId"] = result.context[:subscription_id]
+      elsif result.is_a?(Array)
+        body = result.map(&:to_h)
       else
-        body = result
+        body = result.to_h
       end
-      MultiJson.dump(body)
+      Oj.dump(body)
     end
 
     def result_subscription?(result)

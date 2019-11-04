@@ -1,4 +1,5 @@
-require 'multi_json'
+require 'json'
+require 'oj'
 require 'rack'
 require 'graphql'
 

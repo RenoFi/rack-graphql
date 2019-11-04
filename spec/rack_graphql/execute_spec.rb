@@ -18,7 +18,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'valid params' do
     before do
-      post '/graphql', MultiJson.dump(params)
+      post '/graphql', Oj.dump(params)
     end
 
     it do
@@ -31,7 +31,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:variables) { { foo: 'bar' } }
 
     before do
-      post '/graphql', MultiJson.dump(params)
+      post '/graphql', Oj.dump(params)
     end
 
     it do
@@ -44,7 +44,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:variables) { '' }
 
     before do
-      post '/graphql', MultiJson.dump(params)
+      post '/graphql', Oj.dump(params)
     end
 
     it do
@@ -57,7 +57,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:variables) { '!@#asdf' }
 
     before do
-      post '/graphql', MultiJson.dump(params)
+      post '/graphql', Oj.dump(params)
     end
 
     it do
@@ -69,7 +69,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:variables) { 1 }
 
     before do
-      post '/graphql', MultiJson.dump(params)
+      post '/graphql', Oj.dump(params)
     end
 
     it do
@@ -79,7 +79,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'get request' do
     before do
-      get '/graphql', MultiJson.dump(params)
+      get '/graphql', Oj.dump(params)
     end
 
     it do
@@ -89,7 +89,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'put request' do
     before do
-      put '/graphql', MultiJson.dump(params)
+      put '/graphql', Oj.dump(params)
     end
 
     it do
@@ -99,7 +99,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'non-hash body' do
     before do
-      post '/graphql', MultiJson.dump('!asdf#')
+      post '/graphql', Oj.dump('!asdf#')
     end
 
     it do
@@ -119,7 +119,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'empty params' do
     before do
-      post '/graphql', MultiJson.dump({})
+      post '/graphql', Oj.dump({})
     end
 
     it do

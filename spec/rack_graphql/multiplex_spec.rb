@@ -18,12 +18,12 @@ RSpec.describe '/graphql request for multiplex execute', type: :request do
 
     let(:params) do
       {
-        _json: [{ query: query1 }, { query: query2 }]
+        '_json' => [{ 'query' => query1 }, { 'query' => query2 }]
       }
     end
 
     before do
-      post '/graphql', MultiJson.dump(params)
+      post '/graphql', Oj.dump(params)
     end
 
     it do
@@ -37,12 +37,12 @@ RSpec.describe '/graphql request for multiplex execute', type: :request do
   describe 'invalid params' do
     let(:params) do
       {
-        _json: ['hello']
+        '_json' => ['hello']
       }
     end
 
     before do
-      post '/graphql', MultiJson.dump(params)
+      post '/graphql', Oj.dump(params)
     end
 
     it do

@@ -2,7 +2,7 @@ RSpec.describe RackGraphql::HealthResponseBuilder do
   describe '#build' do
     subject { described_class.new(app_name: 'rack-graphql-service').build }
 
-    let(:body) { MultiJson.load(subject[2].first) }
+    let(:body) { Oj.load(subject[2].first) }
 
     it do
       expect(subject[0]).to eq(200)
