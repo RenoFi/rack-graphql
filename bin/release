@@ -4,4 +4,7 @@ lib = File.expand_path('../lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'rack_graphql/version'
 
-`bundle && git commit -am "Release #{RackGraphql::VERSION}" && bundle exec rake build release`
+system("bundle") || exit(1)
+system("bundle exec rake") || exit(1)
+system("git commit -am 'Release #{RackGraphql::VERSION}'")
+system("bundle exec rake build release")
