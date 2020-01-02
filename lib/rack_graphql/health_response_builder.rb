@@ -18,13 +18,13 @@ module RackGraphql
     end
 
     def body
-      JSON.generate(
-        status:     :ok,
-        request_ip: request.ip,
-        app_name:   app_name,
-        app_env:    ENV['RACK_ENV'],
-        host:       ENV['HOSTNAME'],
-        revision:   ENV['REVISION']
+      Oj.dump(
+        'status'     => 'ok',
+        'request_ip' => request.ip,
+        'app_name'   => app_name,
+        'app_env'    => ENV['RACK_ENV'],
+        'host'       => ENV['HOSTNAME'],
+        'revision'   => ENV['REVISION']
       )
     end
   end

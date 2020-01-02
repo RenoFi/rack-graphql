@@ -21,7 +21,7 @@ module RackGraphql
       result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
 
       [200, response_headers(result), [response_body(result)]]
-    rescue ArgumentError => e
+    rescue AmbiguousParamError => e
       log("Responded with #{e.class} because of #{e.message}")
       [400, { 'Content-Type' => 'application/json' }, [Oj.dump({})]]
     ensure
@@ -51,14 +51,14 @@ module RackGraphql
         begin
           ensure_hash(Oj.load(ambiguous_param))
         rescue Oj::ParseError
-          raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
+          raise AmbiguousParamError, "Unexpected parameter: #{ambiguous_param}"
         end
       when Hash
         ambiguous_param
       when nil
         {}
       else
-        fail ArgumentError, "Unexpected parameter: #{ambiguous_param}"
+        fail AmbiguousParamError, "Unexpected parameter: #{ambiguous_param}"
       end
     end
 
