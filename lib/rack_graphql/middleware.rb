@@ -1,7 +1,8 @@
 module RackGraphql
   class Middleware
-    def initialize(schema:, context_handler: nil)
+    def initialize(schema:, logger: nil, context_handler: nil)
       @schema = schema
+      @logger = logger
       @context_handler = context_handler || ->(_) {}
     end
 
@@ -16,10 +17,12 @@ module RackGraphql
       operation_name = params['operationName']
       context        = context_handler.call(env)
 
+      log("Executing with params: #{params.inspect}, operationName: #{operation_name}, variables: #{variables.inspect}")
       result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
 
       [200, response_headers(result), [response_body(result)]]
-    rescue ArgumentError
+    rescue ArgumentError => e
+      log("Responded with #{e.class} because of #{e.message}")
       [400, { 'Content-Type' => 'application/json' }, [Oj.dump({})]]
     ensure
       ActiveRecord::Base.clear_active_connections! if defined?(ActiveRecord::Base)
@@ -27,7 +30,7 @@ module RackGraphql
 
     private
 
-    attr_reader :schema, :context_handler
+    attr_reader :schema, :logger, :context_handler
 
     def post_request?(env)
       env['REQUEST_METHOD'] == 'POST'
@@ -115,6 +118,11 @@ module RackGraphql
       return false unless result.is_a?(GraphQL::Query::Result)
 
       result.subscription?
+    end
+
+    def log(message)
+      return unless logger
+      logger.debug("[rack-graphql] #{message}")
     end
   end
 end
