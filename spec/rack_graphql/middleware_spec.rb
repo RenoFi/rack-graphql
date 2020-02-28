@@ -1,11 +1,11 @@
 RSpec.describe RackGraphql::Middleware do
   describe '.call' do
-    let(:context_handler) { ->(env) { { bacon: 'steak', env: env } } }
-    let(:env) { { 'rack.input' => double(gets: Oj.dump({})), 'REQUEST_METHOD' => request_method } }
-
     subject { described_class.new(schema: GraphQL::Schema, context_handler: context_handler).call(env) }
 
-    context 'non-POST request' do
+    let(:context_handler) { ->(env) { { bacon: 'steak', env: env } } }
+    let(:env) { { 'rack.input' => instance_double(Rack::RewindableInput, gets: Oj.dump({})), 'REQUEST_METHOD' => request_method } }
+
+    describe 'non-POST request' do
       let(:request_method) { 'PUT' }
 
       it do
@@ -13,7 +13,7 @@ RSpec.describe RackGraphql::Middleware do
       end
     end
 
-    context 'POST request' do
+    describe 'POST request' do
       let(:request_method) { 'POST' }
 
       it do

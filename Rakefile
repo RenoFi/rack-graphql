@@ -5,4 +5,4 @@ require 'rubocop/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 RuboCop::RakeTask.new
 
-task default: %i[rubocop spec]
+task default: %i[rubocop:auto_correct spec]

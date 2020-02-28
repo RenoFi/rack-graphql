@@ -13,9 +13,9 @@ module RackGraphql
 
       return [400, {}, []] unless params.is_a?(Hash)
 
-      variables      = ensure_hash(params['variables'])
+      variables = ensure_hash(params['variables'])
       operation_name = params['operationName']
-      context        = context_handler.call(env)
+      context = context_handler.call(env)
 
       log("Executing with params: #{params.inspect}, operationName: #{operation_name}, variables: #{variables.inspect}")
       result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
