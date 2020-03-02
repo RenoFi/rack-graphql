@@ -1,7 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/rack-graphql.svg)](https://rubygems.org/gems/rack-graphql)
 [![Build Status](https://travis-ci.org/RenoFi/rack-graphql.svg?branch=master)](https://travis-ci.org/RenoFi/rack-graphql)
-[![GitHub issues](https://img.shields.io/github/issues/renofi/rack-graphql)](https://github.com/renofi/rack-graphql/issues)
-[![GitHub license](https://img.shields.io/github/license/renofi/rack-graphql)](https://github.com/RenoFi/rack-graphql/blob/master/LICENSE.txt)
 
 # rack-graphql
 
