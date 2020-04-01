@@ -15,7 +15,7 @@ GEM
     graphql (1.10.5)
     jaro_winkler (1.5.4)
     method_source (0.9.2)
-    oj (3.10.2)
+    oj (3.10.5)
     parallel (1.19.1)
     parser (2.7.0.5)
       ast (~> 2.4.0)
