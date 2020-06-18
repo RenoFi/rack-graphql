@@ -37,7 +37,7 @@ module RackGraphql
     end
 
     def post_data(env)
-      ::Oj.load(env['rack.input'].gets)
+      ::Oj.load(env['rack.input'].gets.to_s)
     rescue Oj::ParseError
       nil
     end

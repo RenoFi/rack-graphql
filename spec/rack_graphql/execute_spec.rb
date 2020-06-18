@@ -65,6 +65,16 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     end
   end
 
+  describe 'nil payload' do
+    before do
+      post '/graphql'
+    end
+
+    it do
+      expect(last_response.status).to eq(400)
+    end
+  end
+
   describe 'variables are unsupported type' do
     let(:variables) { 1 }
 
