@@ -27,6 +27,18 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     end
   end
 
+  describe 'catch all errors' do
+    before do
+      expect(Oj).to receive(:load).and_raise(StandardError.new("omg"))
+      post '/graphql', Oj.dump(params)
+    end
+
+    it do
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include("StandardError: omg")
+    end
+  end
+
   describe 'variables are hash' do
     let(:variables) { { foo: 'bar' } }
 

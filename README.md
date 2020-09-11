@@ -27,6 +27,7 @@ run RackGraphql::Application.call(
   app_name: 'your-service-name',              # optional, used for health endpoint content
   context_handler: YourGraphqlContextHandler, # optional, empty `proc` by default
   health_route: true,                         # optional, true by default
+  logger: A9n.logger,                         # optional, not set by default
 )
 ```
 
@@ -67,6 +68,14 @@ class GraphqlContextHandler
     end
   end
 end
+```
+
+### Logging exception backtrace
+
+RackGraphql catches all errors and respond with 500 code. By default it adds exception backtrace to the response body. If you don't want to have the backtrace in the response set:
+
+```
+RackGraphql.log_exception_backtrace = false
 ```
 
 ## Contributing
