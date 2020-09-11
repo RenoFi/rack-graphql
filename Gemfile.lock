@@ -2,9 +2,9 @@ PATH
   remote: .
   specs:
     rack-graphql (2.0.0.rc)
-      graphql (~> 1.9)
+      graphql (~> 1.11)
       oj
-      rack (~> 2.0)
+      rack (~> 2.2)
 
 GEM
   remote: https://rubygems.org/
