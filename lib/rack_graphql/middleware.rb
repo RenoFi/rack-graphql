@@ -20,10 +20,33 @@ module RackGraphql
       log("Executing with params: #{params.inspect}, operationName: #{operation_name}, variables: #{variables.inspect}")
       result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
 
-      [200, response_headers(result), [response_body(result)]]
+      [
+        200,
+        response_headers(result),
+        [response_body(result)]
+      ]
     rescue AmbiguousParamError => e
-      log("Responded with #{e.class} because of #{e.message}")
-      [400, { 'Content-Type' => 'application/json' }, [Oj.dump({})]]
+      exception_string = dump_exception(e)
+      log(exception_string)
+      env[Rack::RACK_ERRORS].puts(exception_string)
+      env[Rack::RACK_ERRORS].flush
+      [
+        400,
+        { 'Content-Type' => 'application/json' },
+        [Oj.dump({})]
+      ]
+    rescue StandardError, LoadError, SyntaxError => e
+      # To respect the graphql spec, all errors need to be returned as json.
+      # It needs to take Rack::ShowExceptions role of catching all exceptions raised by the app.
+      exception_string = dump_exception(e)
+      log(exception_string)
+      env[Rack::RACK_ERRORS].puts(exception_string)
+      env[Rack::RACK_ERRORS].flush
+      [
+        500,
+        { 'Content-Type' => 'application/json' },
+        [Oj.dump(errors: [{ message: exception_string }])]
+      ]
     ensure
       ActiveRecord::Base.clear_active_connections! if defined?(ActiveRecord::Base)
     end
@@ -123,6 +146,13 @@ module RackGraphql
     def log(message)
       return unless logger
       logger.debug("[rack-graphql] #{message}")
+    end
+
+    # Based on https://github.com/rack/rack/blob/master/lib/rack/show_exceptions.rb
+    def dump_exception(exception)
+      string = "#{exception.class}: #{exception.message}\n"
+      string << exception.backtrace.map { |l| "\t#{l}" }.join("\n") if RackGraphql.log_exception_backtrace
+      string
     end
   end
 end
