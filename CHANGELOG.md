@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.1 - 2020-09-14
+
+- Rename `source_app` to `app_name` in error payload.
+
 ## 2.2.0 - 2020-09-14
 
 - Add `source_app` to error payload.

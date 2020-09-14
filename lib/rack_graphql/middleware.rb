@@ -159,7 +159,7 @@ module RackGraphql
 
     def exception_hash(exception)
       {
-        'source_app' => app_name,
+        'app_name' => app_name,
         'message' => "#{exception.class}: #{exception.message}",
         'backtrace' => log_exception_backtrace ? exception.backtrace : "[FILTERED]"
       }

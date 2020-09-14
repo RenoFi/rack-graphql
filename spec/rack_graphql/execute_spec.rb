@@ -40,7 +40,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
       expect(json_response["errors"]).not_to be_empty
       expect(json_response["errors"].size).to eq(1)
       expect(json_response["errors"][0]).to be_kind_of(Hash)
-      expect(json_response["errors"][0]["source_app"]).not_to be_empty
+      expect(json_response["errors"][0]["app_name"]).not_to be_empty
       expect(json_response["errors"][0]["message"]).to eq("StandardError: omg")
       expect(json_response["errors"][0]["backtrace"]).to be_kind_of(Array)
       expect(json_response["errors"]).not_to be_empty
