@@ -45,7 +45,7 @@ module RackGraphql
       [
         500,
         { 'Content-Type' => 'application/json' },
-        [Oj.dump(errors: [{ message: exception_string }])]
+        [Oj.dump(errors: [exception_hash(e)])]
       ]
     ensure
       ActiveRecord::Base.clear_active_connections! if defined?(ActiveRecord::Base)
@@ -153,6 +153,13 @@ module RackGraphql
       string = "#{exception.class}: #{exception.message}\n"
       string << exception.backtrace.map { |l| "\t#{l}" }.join("\n") if RackGraphql.log_exception_backtrace
       string
+    end
+
+    def exception_hash(exception)
+      {
+        message: "#{exception.class}: #{exception.message}",
+        backtrace: RackGraphql.log_exception_backtrace ? exception.backtrace : "[FILTERED]"
+      }
     end
   end
 end
