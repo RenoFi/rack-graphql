@@ -1,9 +1,10 @@
 module RackGraphql
   class Middleware
-    def initialize(schema:, logger: nil, context_handler: nil)
+    def initialize(schema:, logger: nil, context_handler: nil, log_exception_backtrace: RackGraphql.log_exception_backtrace)
       @schema = schema
       @logger = logger
       @context_handler = context_handler || ->(_) {}
+      @log_exception_backtrace = log_exception_backtrace
     end
 
     def call(env)
@@ -53,7 +54,7 @@ module RackGraphql
 
     private
 
-    attr_reader :schema, :logger, :context_handler
+    attr_reader :schema, :logger, :context_handler, :log_exception_backtrace
 
     def post_request?(env)
       env['REQUEST_METHOD'] == 'POST'
@@ -151,14 +152,14 @@ module RackGraphql
     # Based on https://github.com/rack/rack/blob/master/lib/rack/show_exceptions.rb
     def dump_exception(exception)
       string = "#{exception.class}: #{exception.message}\n"
-      string << exception.backtrace.map { |l| "\t#{l}" }.join("\n") if RackGraphql.log_exception_backtrace
+      string << exception.backtrace.map { |l| "\t#{l}" }.join("\n") if log_exception_backtrace
       string
     end
 
     def exception_hash(exception)
       {
         message: "#{exception.class}: #{exception.message}",
-        backtrace: RackGraphql.log_exception_backtrace ? exception.backtrace : "[FILTERED]"
+        backtrace: log_exception_backtrace ? exception.backtrace : "[FILTERED]"
       }
     end
   end
