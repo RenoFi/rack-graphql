@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.0 - 2020-09-14
+
+- Add `source_app` to error payload.
+
 ## 2.1.0 - 2020-09-14
 
 - Add `log_exception_backtrace` option to `RackGraphql::Application`
