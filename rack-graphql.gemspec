@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'oj'
   spec.add_dependency 'rack', '~> 2.2'
 
+  spec.add_development_dependency 'awesome_print'
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'rack-test'

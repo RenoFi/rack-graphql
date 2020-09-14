@@ -2,6 +2,7 @@ require 'bundler/setup'
 require 'pry'
 require 'rack-graphql'
 require 'rack/test'
+require 'ap'
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
@@ -35,10 +36,16 @@ class TestSchema < GraphQL::Schema
   query TestQueryType
 end
 
+class TestContextHandler
+  def self.call(*)
+    { foo: 'bar' }
+  end
+end
+
 def app
   RackGraphql::Application.call(
     schema: TestSchema,
-    context_handler: ->(env) { { meat: 'steak' } }
+    context_handler: TestContextHandler,
   )
 end
 

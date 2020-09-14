@@ -12,7 +12,13 @@ module RackGraphql
 
       ::Rack::Builder.new do
         map '/graphql' do
-          run RackGraphql::Middleware.new(schema: schema, context_handler: context_handler, log_exception_backtrace: log_exception_backtrace, logger: logger)
+          run RackGraphql::Middleware.new(
+            app_name: app_name,
+            schema: schema,
+            context_handler: context_handler,
+            logger: logger,
+            log_exception_backtrace: log_exception_backtrace,
+          )
         end
 
         if health_route

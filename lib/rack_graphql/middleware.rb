@@ -1,9 +1,10 @@
 module RackGraphql
   class Middleware
-    def initialize(schema:, logger: nil, context_handler: nil, log_exception_backtrace: RackGraphql.log_exception_backtrace)
+    def initialize(schema:, app_name: nil, context_handler: nil, logger: nil, log_exception_backtrace: RackGraphql.log_exception_backtrace)
       @schema = schema
-      @logger = logger
+      @app_name = app_name
       @context_handler = context_handler || ->(_) {}
+      @logger = logger
       @log_exception_backtrace = log_exception_backtrace
     end
 
@@ -46,7 +47,7 @@ module RackGraphql
       [
         500,
         { 'Content-Type' => 'application/json' },
-        [Oj.dump(errors: [exception_hash(e)])]
+        [Oj.dump('errors' => [exception_hash(e)])]
       ]
     ensure
       ActiveRecord::Base.clear_active_connections! if defined?(ActiveRecord::Base)
@@ -54,7 +55,7 @@ module RackGraphql
 
     private
 
-    attr_reader :schema, :logger, :context_handler, :log_exception_backtrace
+    attr_reader :schema, :app_name, :logger, :context_handler, :log_exception_backtrace
 
     def post_request?(env)
       env['REQUEST_METHOD'] == 'POST'
@@ -158,8 +159,9 @@ module RackGraphql
 
     def exception_hash(exception)
       {
-        message: "#{exception.class}: #{exception.message}",
-        backtrace: log_exception_backtrace ? exception.backtrace : "[FILTERED]"
+        'source_app' => app_name,
+        'message' => "#{exception.class}: #{exception.message}",
+        'backtrace' => log_exception_backtrace ? exception.backtrace : "[FILTERED]"
       }
     end
   end
