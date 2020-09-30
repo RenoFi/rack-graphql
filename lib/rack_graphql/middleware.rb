@@ -1,5 +1,6 @@
 module RackGraphql
   class Middleware
+    DEFAULT_STATUS_CODE = 200
     DEFAULT_ERROR_STATUS_CODE = 500
 
     def initialize(
@@ -34,7 +35,7 @@ module RackGraphql
       result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
 
       [
-        200,
+        response_status(result),
         response_headers(result),
         [response_body(result)]
       ]
@@ -134,6 +135,13 @@ module RackGraphql
       }.tap do |headers|
         headers['X-Subscription-ID'] = result.context[:subscription_id] if result_subscription?(result)
       end
+    end
+
+    def response_status(result)
+      return DEFAULT_STATUS_CODE if result.is_a?(Array)
+
+      errors = result.to_h["errors"] || []
+      errors.map { |e| e["http_status"] }.compact.first || DEFAULT_STATUS_CODE
     end
 
     def response_body(result = nil)

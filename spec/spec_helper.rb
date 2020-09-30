@@ -18,6 +18,15 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods, type: :request
 end
 
+TestUnauthorizedError = Class.new(StandardError)
+TestCustomError = Class.new(StandardError)
+
+class HealthResponseBuilder
+  def self.build
+    OpenStruct.new(status: :ok)
+  end
+end
+
 class HealthResponseType < GraphQL::Schema::Object
   field :status, String, null: false
 end
@@ -28,12 +37,24 @@ class TestQueryType < GraphQL::Schema::Object
   end
 
   def health
-    OpenStruct.new(status: :ok)
+    HealthResponseBuilder.build
   end
 end
 
 class TestSchema < GraphQL::Schema
   query TestQueryType
+
+  rescue_from TestUnauthorizedError do |exception|
+    ::GraphQL::ExecutionError.new(
+      exception.message,
+      options: { "http_status" => 403 },
+      extensions: {
+        "code" => exception.class.to_s,
+        "http_status" => 403,
+        "details" => exception.message.to_s
+      }
+    )
+  end
 end
 
 class TestContextHandler
@@ -42,13 +63,11 @@ class TestContextHandler
   end
 end
 
-SomeCustomError = Class.new(StandardError)
-
 def app
   RackGraphql::Application.call(
     schema: TestSchema,
     context_handler: TestContextHandler,
-    error_status_code_map: { SomeCustomError => 418 }
+    error_status_code_map: { TestCustomError => 418 }
   )
 end
 
