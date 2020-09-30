@@ -23,12 +23,13 @@ Add following to your `config.ru` file:
 
 ```ruby
 run RackGraphql::Application.call(
-  schema: YourGraqphqlSchema,                    # required
-  app_name: 'your-service-name',                 # optional, used for health endpoint content
-  context_handler: YourGraphqlContextHandler,    # optional, empty `proc` by default
-  log_exception_backtrace: !A9n.env.production?, # optional, `true` default
-  health_route: true,                             # optional, true by default
-  logger: A9n.logger,                            # optional, not set by default
+  schema: YourGraqphqlSchema,                      # required
+  app_name: 'your-service-name',                   # optional, used for health endpoint content
+  context_handler: YourGraphqlContextHandler,      # optional, empty `proc` by default
+  log_exception_backtrace: !A9n.env.production?,   # optional, `true` default
+  health_route: true,                              # optional, true by default
+  logger: A9n.logger,                              # optional, not set by default
+  error_status_code_map: { IamTeapotError => 418 }, # optional
 )
 ```
 

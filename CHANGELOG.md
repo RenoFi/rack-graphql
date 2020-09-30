@@ -2,7 +2,9 @@
 
 ## 2.3.0 - 2020-09-39
 
-- Add `error_status_code_map` option to `RackGraphql::Application`. It allows for return custom http code when specific errors are raised.
+- Add `error_status_code_map` option to `RackGraphql::Application`.
+
+  `error_status_code_map` allows for return custom http code when specific errors are raised.
 
 ## 2.2.1 - 2020-09-14
 
