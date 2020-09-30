@@ -1,11 +1,22 @@
 module RackGraphql
   class Middleware
-    def initialize(schema:, app_name: nil, context_handler: nil, logger: nil, log_exception_backtrace: RackGraphql.log_exception_backtrace)
+    DEFAULT_ERROR_STATUS_CODE = 500
+
+    def initialize(
+      schema:,
+      app_name: nil,
+      context_handler: nil,
+      logger: nil,
+      log_exception_backtrace: RackGraphql.log_exception_backtrace,
+      error_status_code_map: {}
+    )
+
       @schema = schema
       @app_name = app_name
       @context_handler = context_handler || ->(_) {}
       @logger = logger
       @log_exception_backtrace = log_exception_backtrace
+      @error_status_code_map = error_status_code_map
     end
 
     def call(env)
@@ -45,7 +56,7 @@ module RackGraphql
       env[Rack::RACK_ERRORS].puts(exception_string)
       env[Rack::RACK_ERRORS].flush
       [
-        500,
+        error_status_code_map[e.class] || DEFAULT_ERROR_STATUS_CODE,
         { 'Content-Type' => 'application/json' },
         [Oj.dump('errors' => [exception_hash(e)])]
       ]
@@ -55,7 +66,7 @@ module RackGraphql
 
     private
 
-    attr_reader :schema, :app_name, :logger, :context_handler, :log_exception_backtrace
+    attr_reader :schema, :app_name, :logger, :context_handler, :log_exception_backtrace, :error_status_code_map
 
     def post_request?(env)
       env['REQUEST_METHOD'] == 'POST'

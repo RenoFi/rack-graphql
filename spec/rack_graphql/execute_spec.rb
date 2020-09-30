@@ -27,6 +27,26 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     end
   end
 
+  describe 'catch custom error and return custom error code' do
+    before do
+      expect(TestContextHandler).to receive(:call).and_raise(SomeCustomError.new("omg"))
+      post '/graphql', Oj.dump(params)
+    end
+
+    it do
+      expect(last_response.status).to eq(418)
+      json_response = Oj.load(last_response.body)
+      expect(json_response["errors"]).to be_kind_of(Array)
+      expect(json_response["errors"]).not_to be_empty
+      expect(json_response["errors"].size).to eq(1)
+      expect(json_response["errors"][0]).to be_kind_of(Hash)
+      expect(json_response["errors"][0]["app_name"]).not_to be_empty
+      expect(json_response["errors"][0]["message"]).to eq("SomeCustomError: omg")
+      expect(json_response["errors"][0]["backtrace"]).to be_kind_of(Array)
+      expect(json_response["errors"]).not_to be_empty
+    end
+  end
+
   describe 'catch all errors' do
     before do
       expect(TestContextHandler).to receive(:call).and_raise(StandardError.new("omg"))

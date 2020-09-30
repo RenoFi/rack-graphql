@@ -42,10 +42,13 @@ class TestContextHandler
   end
 end
 
+SomeCustomError = Class.new(StandardError)
+
 def app
   RackGraphql::Application.call(
     schema: TestSchema,
     context_handler: TestContextHandler,
+    error_status_code_map: { SomeCustomError => 418 }
   )
 end
 

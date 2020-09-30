@@ -7,7 +7,8 @@ module RackGraphql
       context_handler: nil,
       log_exception_backtrace: RackGraphql.log_exception_backtrace,
       health_route: true,
-      health_response_builder: RackGraphql::HealthResponseBuilder
+      health_response_builder: RackGraphql::HealthResponseBuilder,
+      error_status_code_map: {}
     )
 
       ::Rack::Builder.new do
@@ -18,6 +19,7 @@ module RackGraphql
             context_handler: context_handler,
             logger: logger,
             log_exception_backtrace: log_exception_backtrace,
+            error_status_code_map: error_status_code_map,
           )
         end
 
