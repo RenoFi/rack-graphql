@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.4.0 - 2020-09-39
+
+- Use `http_status` from `ExecutionError` for http response
+
 ## 2.3.0 - 2020-09-39
 
 - Add `error_status_code_map` option to `RackGraphql::Application`.
