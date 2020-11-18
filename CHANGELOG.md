@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.5.0 - 2020-11-18
+
+- make `log_exception_backtrace` false by default and allow to be controlled by `RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE` env var
+
 ## 2.4.0 - 2020-09-39
 
 - Use `http_status` from `ExecutionError` for http response
