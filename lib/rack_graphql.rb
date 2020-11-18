@@ -10,8 +10,12 @@ require 'rack_graphql/application'
 
 module RackGraphql
   class << self
-    attr_accessor :log_exception_backtrace
-  end
+    def log_exception_backtrace
+      return @log_exception_backtrace unless @log_exception_backtrace.nil?
 
-  self.log_exception_backtrace = true
+      %w[1 true].include?(ENV['RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE'].to_s)
+    end
+
+    attr_writer :log_exception_backtrace
+  end
 end

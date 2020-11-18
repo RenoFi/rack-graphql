@@ -66,19 +66,63 @@ RSpec.describe '/graphql request for regular execute', type: :request do
   describe 'catch all errors' do
     before do
       expect(HealthResponseBuilder).to receive(:build).and_raise(StandardError.new("omg"))
-      post '/graphql', Oj.dump(params)
     end
 
-    it do
-      expect(last_response.status).to eq(500)
-      json_response = Oj.load(last_response.body)
-      expect(json_response["errors"]).to be_kind_of(Array)
-      expect(json_response["errors"]).not_to be_empty
-      expect(json_response["errors"].size).to eq(1)
-      expect(json_response["errors"][0]).to be_kind_of(Hash)
-      expect(json_response["errors"][0]["app_name"]).not_to be_empty
-      expect(json_response["errors"][0]["message"]).to eq("StandardError: omg")
-      expect(json_response["errors"][0]["backtrace"]).to be_kind_of(Array)
+    context 'when log_exception_backtrace is enabled by setter' do
+      before do
+        RackGraphql.log_exception_backtrace = true
+        post '/graphql', Oj.dump(params)
+      end
+
+      it do
+        expect(last_response.status).to eq(500)
+        json_response = Oj.load(last_response.body)
+        expect(json_response["errors"]).to be_kind_of(Array)
+        expect(json_response["errors"]).not_to be_empty
+        expect(json_response["errors"].size).to eq(1)
+        expect(json_response["errors"][0]).to be_kind_of(Hash)
+        expect(json_response["errors"][0]["app_name"]).not_to be_empty
+        expect(json_response["errors"][0]["message"]).to eq("StandardError: omg")
+        expect(json_response["errors"][0]["backtrace"]).to be_kind_of(Array)
+      end
+    end
+
+    context 'when log_exception_backtrace is enabled by env var' do
+      before do
+        ENV['RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE'] = 'true'
+        post '/graphql', Oj.dump(params)
+      end
+
+      it do
+        expect(last_response.status).to eq(500)
+        json_response = Oj.load(last_response.body)
+        expect(json_response["errors"]).to be_kind_of(Array)
+        expect(json_response["errors"]).not_to be_empty
+        expect(json_response["errors"].size).to eq(1)
+        expect(json_response["errors"][0]).to be_kind_of(Hash)
+        expect(json_response["errors"][0]["app_name"]).not_to be_empty
+        expect(json_response["errors"][0]["message"]).to eq("StandardError: omg")
+        expect(json_response["errors"][0]["backtrace"]).to be_kind_of(Array)
+      end
+    end
+
+    context 'when log_exception_backtrace is disabled' do
+      before do
+        RackGraphql.log_exception_backtrace = false
+        post '/graphql', Oj.dump(params)
+      end
+
+      it do
+        expect(last_response.status).to eq(500)
+        json_response = Oj.load(last_response.body)
+        expect(json_response["errors"]).to be_kind_of(Array)
+        expect(json_response["errors"]).not_to be_empty
+        expect(json_response["errors"].size).to eq(1)
+        expect(json_response["errors"][0]).to be_kind_of(Hash)
+        expect(json_response["errors"][0]["app_name"]).not_to be_empty
+        expect(json_response["errors"][0]["message"]).to eq("StandardError: omg")
+        expect(json_response["errors"][0]["backtrace"]).to eq("[FILTERED]")
+      end
     end
   end
 

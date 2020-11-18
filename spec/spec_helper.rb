@@ -15,6 +15,11 @@ RSpec.configure do |config|
     meta[:aggregate_failures] = true
   end
 
+  config.before do
+    RackGraphql.log_exception_backtrace = true
+    ENV['RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE'] = nil
+  end
+
   config.include Rack::Test::Methods, type: :request
 end
 
