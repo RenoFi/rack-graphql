@@ -2,6 +2,7 @@ module RackGraphql
   class Middleware
     DEFAULT_STATUS_CODE = 200
     DEFAULT_ERROR_STATUS_CODE = 500
+    NULL_BYTE = '\u0000'.freeze
 
     def initialize(
       schema:,
@@ -75,7 +76,7 @@ module RackGraphql
 
     def post_data(env)
       payload = env['rack.input'].read.to_s
-      return nil if payload.index('\u0000')
+      return nil if payload.index(NULL_BYTE)
 
       ::Oj.load(payload)
     rescue Oj::ParseError
