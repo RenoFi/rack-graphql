@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.5.1 - 2020-11-18
+
+- respond with http status 400 when UTF null byte passed as part of input
+
 ## 2.5.0 - 2020-11-18
 
 - make `log_exception_backtrace` false by default and allow to be controlled by `RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE` env var
