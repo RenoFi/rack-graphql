@@ -36,6 +36,10 @@ class HealthResponseType < GraphQL::Schema::Object
   field :status, String, null: false
 end
 
+class ProductsResponseType < GraphQL::Schema::Object
+  field :products, [String], null: false
+end
+
 class TestQueryType < GraphQL::Schema::Object
   field :health, HealthResponseType, null: true do
     description 'Static endpoint used for testing purposes'
@@ -43,6 +47,17 @@ class TestQueryType < GraphQL::Schema::Object
 
   def health
     HealthResponseBuilder.build
+  end
+
+  field :search, ProductsResponseType, null: true do
+    argument :keyword, String, required: true
+    description 'Endpoint with parameters used for testing purposes'
+  end
+
+  def search(keyword:)
+    OpenStruct.new(
+      products: keyword.empty? ? [] : %w[Toothbrush Soap]
+    )
   end
 end
 
