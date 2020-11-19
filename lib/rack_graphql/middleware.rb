@@ -74,7 +74,10 @@ module RackGraphql
     end
 
     def post_data(env)
-      ::Oj.load(env['rack.input'].gets.to_s)
+      payload = env['rack.input'].read.to_s
+      return nil if payload.index('\u0000')
+
+      ::Oj.load(payload)
     rescue Oj::ParseError
       nil
     end

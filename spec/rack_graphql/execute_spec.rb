@@ -63,6 +63,37 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     end
   end
 
+  context 'for endpoint with input parameters' do
+    let(:query) do
+      %|{
+      result: search(keyword: "#{keyword}") {
+        products
+      }
+    }|
+    end
+    let(:keyword) { 'body care' }
+
+    before do
+      post '/graphql', Oj.dump(params)
+    end
+
+    it 'responds successfully' do
+      expect(last_response.status).to eq(200)
+      json_response = Oj.load(last_response.body)
+
+      expect(json_response['data']['result']['products']).to eq(%w[Toothbrush Soap])
+    end
+
+    context 'when passed null utf byte as part of input' do
+      let(:keyword) { "body\u0000care" }
+
+      it 'responds with bad request' do
+        expect(last_response.status).to eq(400)
+        expect(last_response.body).to be_empty
+      end
+    end
+  end
+
   describe 'catch all errors' do
     before do
       expect(HealthResponseBuilder).to receive(:build).and_raise(StandardError.new("omg"))
