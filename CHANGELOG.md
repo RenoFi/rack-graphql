@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## 2.5.1 - 2020-11-18
+## 2.5.1 - 2020-11-19
 
-- respond with http status 400 when UTF null byte passed as part of input
+- respond with http status `400` when UTF null byte is passed as a part of the input
 
 ## 2.5.0 - 2020-11-18
 
