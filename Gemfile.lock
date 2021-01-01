@@ -15,7 +15,7 @@ GEM
     diff-lcs (1.4.4)
     graphql (1.11.6)
     method_source (1.0.0)
-    oj (3.10.16)
+    oj (3.10.18)
     parallel (1.20.1)
     parser (2.7.2.0)
       ast (~> 2.4.1)
