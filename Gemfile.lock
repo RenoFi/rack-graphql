@@ -63,6 +63,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   awesome_print
@@ -77,4 +78,4 @@ DEPENDENCIES
   rubocop-rspec
 
 BUNDLED WITH
-   2.1.4
+   2.2.4
