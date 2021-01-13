@@ -4,21 +4,11 @@ module RackGraphql
     DEFAULT_ERROR_STATUS_CODE = 500
     NULL_BYTE = '\u0000'.freeze
 
-    def initialize(
-      schema:,
-      app_name: nil,
-      context_handler: nil,
-      logger: nil,
-      log_exception_backtrace: RackGraphql.log_exception_backtrace,
-      error_status_code_map: {}
-    )
-
+    def initialize(schema:, app_name: nil, context_handler: nil, logger: nil)
       @schema = schema
       @app_name = app_name
       @context_handler = context_handler || ->(_) {}
       @logger = logger
-      @log_exception_backtrace = log_exception_backtrace
-      @error_status_code_map = error_status_code_map
     end
 
     def call(env)
@@ -40,35 +30,11 @@ module RackGraphql
         response_headers(result),
         [response_body(result)]
       ]
-    rescue AmbiguousParamError => e
-      exception_string = dump_exception(e)
-      log(exception_string)
-      env[Rack::RACK_ERRORS].puts(exception_string)
-      env[Rack::RACK_ERRORS].flush
-      [
-        400,
-        { 'Content-Type' => 'application/json' },
-        [Oj.dump({})]
-      ]
-    rescue StandardError, LoadError, SyntaxError => e
-      # To respect the graphql spec, all errors need to be returned as json.
-      # It needs to take Rack::ShowExceptions role of catching all exceptions raised by the app.
-      exception_string = dump_exception(e)
-      log(exception_string)
-      env[Rack::RACK_ERRORS].puts(exception_string)
-      env[Rack::RACK_ERRORS].flush
-      [
-        error_status_code_map[e.class] || DEFAULT_ERROR_STATUS_CODE,
-        { 'Content-Type' => 'application/json' },
-        [Oj.dump('errors' => [exception_hash(e)])]
-      ]
-    ensure
-      ActiveRecord::Base.clear_active_connections! if defined?(ActiveRecord::Base)
     end
 
     private
 
-    attr_reader :schema, :app_name, :logger, :context_handler, :log_exception_backtrace, :error_status_code_map
+    attr_reader :schema, :app_name, :logger, :context_handler
 
     def post_request?(env)
       env['REQUEST_METHOD'] == 'POST'
@@ -171,21 +137,6 @@ module RackGraphql
     def log(message)
       return unless logger
       logger.debug("[rack-graphql] #{message}")
-    end
-
-    # Based on https://github.com/rack/rack/blob/master/lib/rack/show_exceptions.rb
-    def dump_exception(exception)
-      string = "#{exception.class}: #{exception.message}\n"
-      string << exception.backtrace.map { |l| "\t#{l}" }.join("\n") if log_exception_backtrace
-      string
-    end
-
-    def exception_hash(exception)
-      {
-        'app_name' => app_name,
-        'message' => "#{exception.class}: #{exception.message}",
-        'backtrace' => log_exception_backtrace ? exception.backtrace : "[FILTERED]"
-      }
     end
   end
 end

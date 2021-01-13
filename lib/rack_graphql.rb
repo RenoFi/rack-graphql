@@ -5,6 +5,8 @@ require 'graphql'
 require 'rack_graphql/version'
 require 'rack_graphql/exceptions'
 require 'rack_graphql/health_response_builder'
+require 'rack_graphql/log_errors_middleware'
+require 'rack_graphql/exception_json_response_middleware'
 require 'rack_graphql/middleware'
 require 'rack_graphql/application'
 
