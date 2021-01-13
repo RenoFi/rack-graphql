@@ -10,6 +10,7 @@ module RackGraphql
       context_handler: nil,
       logger: nil,
       log_exception_backtrace: RackGraphql.log_exception_backtrace,
+      rescue_exceptions_with_500_json: RackGraphql.rescue_exceptions_with_500_json,
       error_status_code_map: {}
     )
 
@@ -18,6 +19,7 @@ module RackGraphql
       @context_handler = context_handler || ->(_) {}
       @logger = logger
       @log_exception_backtrace = log_exception_backtrace
+      @rescue_exceptions_with_500_json = rescue_exceptions_with_500_json
       @error_status_code_map = error_status_code_map
     end
 
@@ -57,6 +59,8 @@ module RackGraphql
       log(exception_string)
       env[Rack::RACK_ERRORS].puts(exception_string)
       env[Rack::RACK_ERRORS].flush
+      raise unless rescue_exceptions_with_500_json
+
       [
         error_status_code_map[e.class] || DEFAULT_ERROR_STATUS_CODE,
         { 'Content-Type' => 'application/json' },
@@ -68,7 +72,7 @@ module RackGraphql
 
     private
 
-    attr_reader :schema, :app_name, :logger, :context_handler, :log_exception_backtrace, :error_status_code_map
+    attr_reader :schema, :app_name, :logger, :context_handler, :log_exception_backtrace, :rescue_exceptions_with_500_json, :error_status_code_map
 
     def post_request?(env)
       env['REQUEST_METHOD'] == 'POST'

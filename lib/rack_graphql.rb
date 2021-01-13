@@ -16,6 +16,12 @@ module RackGraphql
       %w[1 true].include?(ENV['RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE'].to_s)
     end
 
-    attr_writer :log_exception_backtrace
+    def rescue_exceptions_with_500_json
+      return @rescue_exceptions_with_500_json unless @rescue_exceptions_with_500_json.nil?
+
+      %w[1 true].include?(ENV['RACK_GRAPHQL_RESCUE_EXCEPTIONS'].to_s) || ENV['RACK_GRAPHQL_RESCUE_EXCEPTIONS'].nil?
+    end
+
+    attr_writer :log_exception_backtrace, :rescue_exceptions_with_500_json
   end
 end
