@@ -23,14 +23,15 @@ Add following to your `config.ru` file:
 
 ```ruby
 run RackGraphql::Application.call(
-  schema: YourGraqphqlSchema,                      # required
-  app_name: 'your-service-name',                   # optional, used for health endpoint content
-  context_handler: YourGraphqlContextHandler,      # optional, empty `proc` by default
-  log_exception_backtrace: !A9n.env.production?,   # optional, `false` default
+  schema: YourGraqphqlSchema,                       # required
+  app_name: 'your-service-name',                    # optional, used for health endpoint content
+  context_handler: YourGraphqlContextHandler,       # optional, empty `proc` by default
+  log_exception_backtrace: !A9n.env.production?,    # optional, `false` default
   # `true` when `RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE` env var is set to `'1'` or `'true'`
-  health_route: true,                              # optional, true by default
-  logger: A9n.logger,                              # optional, not set by default
+  health_route: true,                               # optional, true by default
+  logger: A9n.logger,                               # optional, not set by default
   error_status_code_map: { IamTeapotError => 418 }, # optional
+  re_raise_exceptions: true,                        # optional, false by default
 )
 ```
 
@@ -81,9 +82,9 @@ RackGraphql catches all errors and respond with 500 code. By default it adds exc
 RackGraphql.log_exception_backtrace = false
 ```
 
-### Error tracking/reporting 
+### Error tracking/reporting
 
-To respect the graphql spec, all errors need to be returned as json and `rack-graphql` catches all exceptions and does NOT re-raise them.
+To respect the graphql spec, all errors need to be returned as json and `rack-graphql` catches all exceptions and does NOT re-raise them. You can change this behavior via `re_raise_exceptions` argument.
 Because of this, using error tracking middleware (`use Sentry::Rack::CaptureExceptions`, `use Raven::Rack`) does not take any effect for graphql requests.
 
 To use Sentry or other reporting tool for graphql queries, you can use `GraphQL::Schema` middleware:
@@ -106,9 +107,9 @@ class GraphqlErrorTrackerMiddleware
 end
 
 # MySchema.middleware GraphqlErrorTrackerMiddleware
-# or 
+# or
 # GraphQL::Schema.middleware GraphqlErrorTrackerMiddleware
-# or 
+# or
 # class MySchema < GraphQL::Schema
 #   middleware GraphqlErrorTrackerMiddleware
 # end
