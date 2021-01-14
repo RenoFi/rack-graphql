@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.6.0 - 2021-01-14
+
+- Add ability to re-raise exception (`re_raise_exceptions` option)
+
 ## 2.5.1 - 2020-11-19
 
 - respond with http status `400` when UTF null byte is passed as a part of the input
