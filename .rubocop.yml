@@ -13,3 +13,6 @@ AllCops:
 Naming/FileName:
   Exclude:
     - 'lib/*.rb'
+
+Metrics/ParameterLists:
+  Enabled: false
