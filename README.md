@@ -81,6 +81,39 @@ RackGraphql catches all errors and respond with 500 code. By default it adds exc
 RackGraphql.log_exception_backtrace = false
 ```
 
+### Error tracking/reporting 
+
+To respect the graphql spec, all errors need to be returned as json and `rack-graphql` catches all exceptions and does NOT re-raise them.
+Because of this, using error tracking middleware (`use Sentry::Rack::CaptureExceptions`, `use Raven::Rack`) does not take any effect for graphql requests.
+
+To use Sentry or other reporting tool for graphql queries, you can use `GraphQL::Schema` middleware:
+
+```ruby
+class GraphqlErrorTrackerMiddleware
+  def self.call(parent_type, parent_object, field_definition, field_args, query_context)
+    yield
+  rescue StandardError => e
+    extra = {
+      parent_type: parent_type.inspect,
+      parent_object: parent_object.inspect,
+      field_definition: field_definition.to_s,
+      field_args: field_args&.to_h,
+      query_context: query_context&.to_h
+    }
+    Sentry.capture_exception(e, extra: extra)
+    raise
+  end
+end
+
+# MySchema.middleware GraphqlErrorTrackerMiddleware
+# or 
+# GraphQL::Schema.middleware GraphqlErrorTrackerMiddleware
+# or 
+# class MySchema < GraphQL::Schema
+#   middleware GraphqlErrorTrackerMiddleware
+# end
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/RenoFi/rack-graphql. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
