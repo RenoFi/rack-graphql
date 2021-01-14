@@ -52,7 +52,8 @@ module RackGraphql
       ]
     rescue StandardError, LoadError, SyntaxError => e
       # To respect the graphql spec, all errors need to be returned as json.
-      # It needs to take Rack::ShowExceptions role of catching all exceptions raised by the app.
+      # Exceptions are not re-raised, so they cannot be caught
+      # by error tracking rack middlewares.
       exception_string = dump_exception(e)
       log(exception_string)
       env[Rack::RACK_ERRORS].puts(exception_string)
