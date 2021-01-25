@@ -2,6 +2,10 @@ require 'oj'
 require 'rack'
 require 'graphql'
 
+# Timeout needs to be manually required before following fix is released:
+# https://github.com/rmosolgo/graphql-ruby/commit/56abba472dbb48a1f8445d41f928bea72b5148e9
+require 'timeout'
+
 require 'rack_graphql/version'
 require 'rack_graphql/exceptions'
 require 'rack_graphql/health_response_builder'
