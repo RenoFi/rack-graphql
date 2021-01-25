@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.6.1 - 2021-01-14
+ 
+- Fix uninitialized `Timeout` error. The issue was fixed in https://github.com/rmosolgo/graphql-ruby/commit/56abba472dbb48a1f8445d41f928bea72b5148e9, but new version has not yet been relased.
+
 ## 2.6.0 - 2021-01-14
 
 - Add ability to re-raise exception (`re_raise_exceptions` option)
