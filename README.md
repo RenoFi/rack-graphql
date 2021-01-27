@@ -87,32 +87,31 @@ RackGraphql.log_exception_backtrace = false
 To respect the graphql spec, all errors need to be returned as json and `rack-graphql` catches all exceptions and does NOT re-raise them. You can change this behavior via `re_raise_exceptions` argument.
 Because of this, using error tracking middleware (`use Sentry::Rack::CaptureExceptions`, `use Raven::Rack`) does not take any effect for graphql requests.
 
-To use Sentry or other reporting tool for graphql queries, you can use `GraphQL::Schema` middleware:
+To use Sentry or other reporting tool for graphql queries, you should handle it on graphql schema level:
 
 ```ruby
-class GraphqlErrorTrackerMiddleware
-  def self.call(parent_type, parent_object, field_definition, field_args, query_context)
-    yield
-  rescue StandardError => e
+class MySchema < GraphQL::Schema
+  rescue_from StandardError do |e, obj, args, ctx, field|
     extra = {
-      parent_type: parent_type.inspect,
-      parent_object: parent_object.inspect,
-      field_definition: field_definition.to_s,
-      field_args: field_args&.to_h,
-      query_context: query_context&.to_h
+      args: args,
+      field: field.inspect,
+      context: ctx
     }
     Sentry.capture_exception(e, extra: extra)
+    # re-raise to be handled by rack middleware
     raise
+    # or return execution error
+    ::GraphQL::ExecutionError.new(
+      exception.class.to_s,
+      options: { "http_status" => 500 },
+      extensions: {
+        "code" => exception.class.to_s,
+        "http_status" => 500,
+        "details" => exception.inspect
+      }
+    )
   end
 end
-
-# MySchema.middleware GraphqlErrorTrackerMiddleware
-# or
-# GraphQL::Schema.middleware GraphqlErrorTrackerMiddleware
-# or
-# class MySchema < GraphQL::Schema
-#   middleware GraphqlErrorTrackerMiddleware
-# end
 ```
 
 ## Contributing
