@@ -9,6 +9,7 @@ module RackGraphql
       log_exception_backtrace: RackGraphql.log_exception_backtrace,
       health_route: true,
       health_response_builder: RackGraphql::HealthResponseBuilder,
+      root_path_response_builder: RackGraphql::HealthResponseBuilder,
       error_status_code_map: {}
     )
 
@@ -33,9 +34,11 @@ module RackGraphql
           map '/healthz' do
             run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
           end
+        end
 
+        if root_path_response_builder
           map '/' do
-            run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
+            run ->(env) { root_path_response_builder.new(app_name: app_name, env: env).build }
           end
         end
       end
