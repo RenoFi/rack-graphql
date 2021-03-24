@@ -29,6 +29,7 @@ run RackGraphql::Application.call(
   log_exception_backtrace: !A9n.env.production?,    # optional, `false` default
   # `true` when `RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE` env var is set to `'1'` or `'true'`
   health_route: true,                               # optional, true by default
+  health_on_root_path: health_route,                # optional, health_route value by default (mind map '/' is covering '/any/path-123') 
   logger: A9n.logger,                               # optional, not set by default
   error_status_code_map: { IamTeapotError => 418 }, # optional
   re_raise_exceptions: true,                        # optional, false by default
