@@ -1,5 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/rack-graphql.svg)](https://rubygems.org/gems/rack-graphql)
-[![Build Status](https://travis-ci.org/RenoFi/rack-graphql.svg?branch=master)](https://travis-ci.org/RenoFi/rack-graphql)
+[![Build Status](https://github.com/RenoFi/rack-graphql/actions/workflows/ci.yml/badge.svg)](https://github.com/RenoFi/rack-graphql/actions/workflows/ci.yml?query=branch%3Amain)
 
 # rack-graphql
 
