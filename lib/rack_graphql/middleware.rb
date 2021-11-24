@@ -178,6 +178,7 @@ module RackGraphql
 
     def log(message)
       return unless logger
+
       logger.debug("[rack-graphql] #{message}")
     end
 
