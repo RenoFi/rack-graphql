@@ -70,7 +70,10 @@ module RackGraphql
         [Oj.dump('errors' => [exception_hash(e)])]
       ]
     ensure
-      ActiveRecord::Base.clear_active_connections! if defined?(ActiveRecord::Base)
+      if defined?(ActiveRecord::Base)
+        ActiveRecord::Base.clear_active_connections!
+        ActiveRecord::Base.flush_idle_connections!
+      end
     end
 
     private
