@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## 2.7.3 - 2021-03-24
+## 2.7.3 - 2022-01-18
 
-- Add ability to skip setting up health endpoint on root path with `health_on_root_path` option.
+- Drop ruby 2.x support (3.0.0 is a minimal version)
 
 ## 2.7.0 - 2021-03-24
 
