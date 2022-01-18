@@ -8,7 +8,7 @@ inherit_from:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.0
 
 Naming/FileName:
   Exclude:
