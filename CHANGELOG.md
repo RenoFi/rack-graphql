@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.9.0 - 2022-03-14
+
+- Drop graphql 1.x support
+
 ## 2.8.0 - 2022-03-14
 
 - Add ability to provide app run on root path
