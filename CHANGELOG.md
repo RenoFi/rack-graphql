@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.8.0 - 2022-03-14
+
+- Add ability to provide app run on root path
+
 ## 2.7.3 - 2022-01-18
 
 - Drop ruby 2.x support (3.0.0 is a minimal version)
