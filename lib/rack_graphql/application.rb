@@ -10,6 +10,7 @@ module RackGraphql
       health_route: true,
       health_response_builder: RackGraphql::HealthResponseBuilder,
       health_on_root_path: health_route,
+      root_path_app: nil,
       error_status_code_map: {}
     )
 
@@ -36,7 +37,11 @@ module RackGraphql
           end
         end
 
-        if health_on_root_path
+        if root_path_app
+          map '/' do
+            run root_path_app
+          end
+        elsif health_on_root_path
           map '/' do
             run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
           end
