@@ -17,23 +17,23 @@ module RackGraphql
       ::Rack::Builder.new do
         map '/graphql' do
           run RackGraphql::Middleware.new(
-            app_name:,
-            schema:,
-            context_handler:,
-            re_raise_exceptions:,
-            logger:,
-            log_exception_backtrace:,
-            error_status_code_map:,
+            app_name: app_name,
+            schema: schema,
+            context_handler: context_handler,
+            re_raise_exceptions: re_raise_exceptions,
+            logger: logger,
+            log_exception_backtrace: log_exception_backtrace,
+            error_status_code_map: error_status_code_map,
           )
         end
 
         if health_route
           map '/health' do
-            run ->(env) { health_response_builder.new(app_name:, env:).build }
+            run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
           end
 
           map '/healthz' do
-            run ->(env) { health_response_builder.new(app_name:, env:).build }
+            run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
           end
         end
 
@@ -43,7 +43,7 @@ module RackGraphql
           end
         elsif health_on_root_path
           map '/' do
-            run ->(env) { health_response_builder.new(app_name:, env:).build }
+            run ->(env) { health_response_builder.new(app_name: app_name, env: env).build }
           end
         end
       end
