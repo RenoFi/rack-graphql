@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.9.1 - 2022-04-02
+
+- Test against ruby 3.1
+
 ## 2.9.0 - 2022-03-14
 
 - Drop graphql 1.x support

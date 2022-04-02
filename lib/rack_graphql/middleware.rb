@@ -35,7 +35,7 @@ module RackGraphql
       context = context_handler.call(env)
 
       log("Executing with params: #{params.inspect}, operationName: #{operation_name}, variables: #{variables.inspect}")
-      result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
+      result = execute(params:, operation_name:, variables:, context:)
 
       [
         response_status(result),
@@ -113,14 +113,14 @@ module RackGraphql
 
     def execute(params:, operation_name:, variables:, context:)
       if valid_multiplex?(params)
-        execute_multi(params['_json'], operation_name: operation_name, variables: variables, context: context)
+        execute_multi(params['_json'], operation_name:, variables:, context:)
       else
-        execute_single(params['query'], operation_name: operation_name, variables: variables, context: context)
+        execute_single(params['query'], operation_name:, variables:, context:)
       end
     end
 
     def execute_single(query, operation_name:, variables:, context:)
-      schema.execute(query, operation_name: operation_name, variables: variables, context: context)
+      schema.execute(query, operation_name:, variables:, context:)
     end
 
     def valid_multiplex?(params)
@@ -131,9 +131,9 @@ module RackGraphql
       queries = queries_params.map do |param|
         {
           query: param['query'],
-          operation_name: operation_name,
-          variables: variables,
-          context: context
+          operation_name:,
+          variables:,
+          context:
         }
       end
 
