@@ -179,7 +179,7 @@ module RackGraphql
     def log(message)
       return unless logger
 
-      logger.debug("[rack-graphql] #{message}")
+      logger.info("[rack-graphql] #{message}")
     end
 
     # Based on https://github.com/rack/rack/blob/master/lib/rack/show_exceptions.rb
