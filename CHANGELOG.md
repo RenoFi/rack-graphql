@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 2.9.1 - 2022-04-02
+## 2.11.0 - 2022-05-25
+
+- change log level to info
+
+## 2.10.1 - 2022-04-02
 
 - Test against ruby 3.1
 
