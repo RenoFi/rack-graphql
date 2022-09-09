@@ -5,8 +5,8 @@ require 'rack_graphql/version'
 Gem::Specification.new do |spec|
   spec.name = 'rack-graphql'
   spec.version = RackGraphql::VERSION
-  spec.authors = ['Krzysztof Knapik', 'RenoFi Engineering Team']
-  spec.email = ['knapo@knapo.net', 'engineering@renofi.com']
+  spec.authors = ['Krzysztof Knapik']
+  spec.email = ['knapo@knapo.net']
 
   spec.summary = 'Rack middleware implementing graphql endpoint.'
   spec.homepage = 'https://github.com/RenoFi/rack-graphql'
@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'graphql', '>= 1.13'
   spec.add_dependency 'oj'
-  spec.add_dependency 'rack', '~> 2.2'
+  spec.add_dependency 'rack', '~> 3.0'
 
   spec.add_development_dependency 'awesome_print'
   spec.add_development_dependency 'bundler'
