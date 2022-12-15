@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.0 - 2022-12-15
+
+- support rack 3.x and graphql 2.x
+
 ## 2.11.0 - 2022-05-25
 
 - change log level to info
