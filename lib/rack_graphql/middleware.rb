@@ -2,6 +2,7 @@ module RackGraphql
   class Middleware
     DEFAULT_STATUS_CODE = 200
     DEFAULT_ERROR_STATUS_CODE = 500
+    STATUS_CODE_HEADER_NAME = 'X-Http-Status-Code'.freeze
     NULL_BYTE = '\u0000'.freeze
 
     def initialize(
@@ -36,10 +37,11 @@ module RackGraphql
 
       log("Executing with params: #{params.inspect}, operationName: #{operation_name}, variables: #{variables.inspect}")
       result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
+      status_code = response_status(result)
 
       [
-        response_status(result),
-        response_headers(result),
+        status_code,
+        response_headers(result, status_code: status_code),
         [response_body(result)]
       ]
     rescue AmbiguousParamError => e
@@ -49,7 +51,7 @@ module RackGraphql
       env[Rack::RACK_ERRORS].flush
       [
         400,
-        { 'Content-Type' => 'application/json' },
+        { 'Content-Type' => 'application/json', STATUS_CODE_HEADER_NAME => 400 },
         [Oj.dump({})]
       ]
     rescue StandardError, LoadError, SyntaxError => e
@@ -64,9 +66,11 @@ module RackGraphql
 
       env[Rack::RACK_ERRORS].puts(exception_string)
       env[Rack::RACK_ERRORS].flush
+
+      status_code = error_status_code_map[e.class] || DEFAULT_ERROR_STATUS_CODE
       [
-        error_status_code_map[e.class] || DEFAULT_ERROR_STATUS_CODE,
-        { 'Content-Type' => 'application/json' },
+        status_code,
+        { 'Content-Type' => 'application/json', STATUS_CODE_HEADER_NAME => status_code },
         [Oj.dump('errors' => [exception_hash(e)])]
       ]
     ensure
@@ -140,10 +144,11 @@ module RackGraphql
       schema.multiplex(queries)
     end
 
-    def response_headers(result = nil)
+    def response_headers(result = nil, status_code: DEFAULT_STATUS_CODE)
       {
         'Access-Control-Expose-Headers' => 'X-Subscription-ID',
-        'Content-Type' => 'application/json'
+        'Content-Type' => 'application/json',
+        STATUS_CODE_HEADER_NAME => status_code,
       }.tap do |headers|
         headers['X-Subscription-ID'] = result.context[:subscription_id] if result_subscription?(result)
       end

@@ -23,6 +23,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
     it do
       expect(last_response.status).to eq(200)
+      expect(last_response.headers["x-http-status-code"]).to eq(200)
       expect(json_response['data']['result']['status']).to eq('ok')
     end
   end
@@ -35,6 +36,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
     it do
       expect(last_response.status).to eq(403)
+      expect(last_response.headers["x-http-status-code"]).to eq(403)
       json_response = Oj.load(last_response.body)
       expect(json_response["errors"]).to be_a(Array)
       expect(json_response["errors"]).not_to be_empty
@@ -52,6 +54,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
     it do
       expect(last_response.status).to eq(418)
+      expect(last_response.headers["x-http-status-code"]).to eq(418)
       json_response = Oj.load(last_response.body)
       expect(json_response["errors"]).to be_a(Array)
       expect(json_response["errors"]).not_to be_empty
@@ -79,6 +82,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
     it 'responds successfully' do
       expect(last_response.status).to eq(200)
+      expect(last_response.headers["x-http-status-code"]).to eq(200)
       json_response = Oj.load(last_response.body)
 
       expect(json_response['data']['result']['products']).to eq(%w[Toothbrush Soap])
