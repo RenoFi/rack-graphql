@@ -20,7 +20,7 @@ RSpec.describe RackGraphql::Middleware do
         expect(subject[0]).to eq(200)
         expect(subject[1]).to eq(
           'Content-Type' => 'application/json',
-          'Access-Control-Expose-Headers' => 'X-Subscription-ID',
+          'Access-Control-Expose-Headers' => 'X-Subscription-ID, X-Http-Status-Code',
           'X-Http-Status-Code' => 200
         )
       end
