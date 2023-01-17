@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.1.0 - 2023-01-17
+
+- Add X-Http-Status-Code to every response, so clients can recognize graphql errors w/o parsing gql response.
+
 ## 3.0.1 - 2023-01-17
 
 -  allow running on rack 2.x, so it can work with apps having sinatra installed (sinatra doesn't support rack 3.x)
