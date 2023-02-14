@@ -1,4 +1,13 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in rack-graphql.gemspec
 gemspec
+
+gem 'awesome_print'
+gem 'bundler'
+gem 'pry'
+gem 'rack-test'
+gem 'rake'
+gem 'rspec'
+gem 'rubocop'
+gem 'rubocop-rake'
+gem 'rubocop-rspec'
