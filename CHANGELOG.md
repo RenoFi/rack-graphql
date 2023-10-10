@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 3.1.0 - 2023-01-17
+## 3.1.3 - 2023-10-10
+
+- use `ActiveRecord::Base.connection_handler.clear_active_connections!` instead of ActiveRecord::Base.clear_active_connections!`, which is deprecated
+
+## 3.1.1 - 2023-01-17
 
 - Add X-Http-Status-Code to every response, so clients can recognize graphql errors w/o parsing gql response.
 
