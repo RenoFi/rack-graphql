@@ -74,6 +74,9 @@ module RackGraphql
         { 'Content-Type' => 'application/json', STATUS_CODE_HEADER_NAME => status_code },
         [Oj.dump('errors' => [exception_hash(e)])]
       ]
+    ensure
+      ActiveRecord::Base.connection_handler.flush_idle_connections!(:all) if defined?(ActiveRecord::Base)
+      ActiveRecord::Base.connection_handler.clear_active_connections!(:all) if defined?(ActiveRecord::Base)
     end
 
     private
