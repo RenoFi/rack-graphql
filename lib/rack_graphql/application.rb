@@ -11,7 +11,8 @@ module RackGraphql
       health_response_builder: RackGraphql::HealthResponseBuilder,
       health_on_root_path: health_route,
       root_path_app: nil,
-      error_status_code_map: {}
+      error_status_code_map: {},
+      request_epilogue: -> { }
     )
 
       ::Rack::Builder.new do
@@ -24,6 +25,7 @@ module RackGraphql
             logger: logger,
             log_exception_backtrace: log_exception_backtrace,
             error_status_code_map: error_status_code_map,
+            request_epilogue: request_epilogue,
           )
         end
 

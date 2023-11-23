@@ -1,3 +1,3 @@
 module RackGraphql
-  VERSION = '3.3.0.beta'.freeze
+  VERSION = '3.3.0'.freeze
 end

@@ -13,7 +13,8 @@ module RackGraphql
       logger: nil,
       log_exception_backtrace: RackGraphql.log_exception_backtrace,
       re_raise_exceptions: false,
-      error_status_code_map: {}
+      error_status_code_map: {},
+      request_epilogue: -> { }
     )
 
       @schema = schema
@@ -75,8 +76,7 @@ module RackGraphql
         [Oj.dump('errors' => [exception_hash(e)])]
       ]
     ensure
-      ActiveRecord::Base.connection_handler.flush_idle_connections!(:all) if defined?(ActiveRecord::Base)
-      ActiveRecord::Base.connection_handler.clear_active_connections!(:all) if defined?(ActiveRecord::Base)
+      request_epilogue.call
     end
 
     private
