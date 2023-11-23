@@ -34,6 +34,7 @@ run RackGraphql::Application.call(
   logger: A9n.logger,                               # optional, not set by default
   error_status_code_map: { IamTeapotError => 418 }, # optional
   re_raise_exceptions: true,                        # optional, false by default
+  request_epilogue: -> { ActiveRecord::Base.connection_handler.clear_active_connections! }
 )
 ```
 

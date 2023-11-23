@@ -14,7 +14,7 @@ module RackGraphql
       log_exception_backtrace: RackGraphql.log_exception_backtrace,
       re_raise_exceptions: false,
       error_status_code_map: {},
-      request_epilogue: -> { }
+      request_epilogue: -> {}
     )
 
       @schema = schema
@@ -24,6 +24,7 @@ module RackGraphql
       @log_exception_backtrace = log_exception_backtrace
       @re_raise_exceptions = re_raise_exceptions
       @error_status_code_map = error_status_code_map
+      @request_epilogue = request_epilogue || -> {}
     end
 
     def call(env)
@@ -38,12 +39,12 @@ module RackGraphql
       context = context_handler.call(env)
 
       log("Executing with params: #{params.inspect}, operationName: #{operation_name}, variables: #{variables.inspect}")
-      result = execute(params: params, operation_name: operation_name, variables: variables, context: context)
+      result = execute(params:, operation_name:, variables:, context:)
       status_code = response_status(result)
 
       [
         status_code,
-        response_headers(result, status_code: status_code),
+        response_headers(result, status_code:),
         [response_body(result)]
       ]
     rescue AmbiguousParamError => e
@@ -82,7 +83,8 @@ module RackGraphql
     private
 
     attr_reader :schema, :app_name, :logger, :context_handler,
-      :log_exception_backtrace, :error_status_code_map, :re_raise_exceptions
+      :log_exception_backtrace, :error_status_code_map,
+      :re_raise_exceptions, :request_epilogue
 
     def post_request?(env)
       env['REQUEST_METHOD'] == 'POST'
@@ -119,14 +121,14 @@ module RackGraphql
 
     def execute(params:, operation_name:, variables:, context:)
       if valid_multiplex?(params)
-        execute_multi(params['_json'], operation_name: operation_name, variables: variables, context: context)
+        execute_multi(params['_json'], operation_name:, variables:, context:)
       else
-        execute_single(params['query'], operation_name: operation_name, variables: variables, context: context)
+        execute_single(params['query'], operation_name:, variables:, context:)
       end
     end
 
     def execute_single(query, operation_name:, variables:, context:)
-      schema.execute(query, operation_name: operation_name, variables: variables, context: context)
+      schema.execute(query, operation_name:, variables:, context:)
     end
 
     def valid_multiplex?(params)
@@ -137,9 +139,9 @@ module RackGraphql
       queries = queries_params.map do |param|
         {
           query: param['query'],
-          operation_name: operation_name,
-          variables: variables,
-          context: context
+          operation_name:,
+          variables:,
+          context:
         }
       end
 

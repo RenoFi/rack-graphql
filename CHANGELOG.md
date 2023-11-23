@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 3.3.0 - 2023-11-23
+
+- add `request_epilogue` so actions like `ActiveRecord::Base.connection_handler.clear_active_connections!` can be passed manually
+- ruby 3.1 is the minimal ruby version
+
 ## 3.1.3 - 2023-10-10
 
 - use `ActiveRecord::Base.connection_handler.clear_active_connections!` instead of ActiveRecord::Base.clear_active_connections!`, which is deprecated
