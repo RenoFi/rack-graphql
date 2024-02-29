@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 3.3.1 - 2024-02-29
+- make ruby 3.1 a minimum version
+
 ## 3.3.0 - 2023-11-23
 
 - add `request_epilogue` so actions like `ActiveRecord::Base.connection_handler.clear_active_connections!` can be passed manually
