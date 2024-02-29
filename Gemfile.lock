@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rack-graphql (3.4.0)
+    rack-graphql (3.5.0)
       graphql (~> 2.0)
       oj
       rack (>= 2.2.6)
