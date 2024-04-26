@@ -21,10 +21,14 @@ RSpec.describe '/graphql request for regular execute', type: :request do
       post '/graphql', Oj.dump(params)
     end
 
-    it do
+    it "responds with ok" do
       expect(last_response.status).to eq(200)
+      expect(json_response["data"]["result"]["status"]).to eq("ok")
+    end
+
+    it "sets headers" do
+      expect(last_response.headers["x-my-custom-header"]).to eq("OK")
       expect(last_response.headers["x-http-status-code"]).to eq(200)
-      expect(json_response['data']['result']['status']).to eq('ok')
     end
   end
 

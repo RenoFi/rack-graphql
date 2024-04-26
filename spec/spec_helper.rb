@@ -46,6 +46,7 @@ class TestQueryType < GraphQL::Schema::Object
   end
 
   def health
+    context[:headers] = { 'X-My-Custom-Header' => 'OK' }
     HealthResponseBuilder.build
   end
 
@@ -79,7 +80,7 @@ end
 
 class TestContextHandler
   def self.call(*)
-    { foo: 'bar' }
+    { text_context_var: 'test_value' }
   end
 end
 
