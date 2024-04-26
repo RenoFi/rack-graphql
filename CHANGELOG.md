@@ -1,7 +1,11 @@
 # CHANGELOG
 
-## 3.3.1 - 2024-02-29
-- make ruby 3.1 a minimum version
+## 3.6.0 - 2024-04-26
+- drop ruby 3.1 support
+- pass context.headers to the http reponse
+
+## 3.5.0 - 2024-02-29
+- make ruby 3.1 as a minimum ruby version, add ruby 3.3 support
 
 ## 3.3.0 - 2023-11-23
 
