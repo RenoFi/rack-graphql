@@ -65,10 +65,10 @@ GEM
       parser (>= 3.3.1.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (3.0.5)
+    rubocop-rspec (3.1.0)
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
-    unicode-display_width (2.5.0)
+    unicode-display_width (2.6.0)
 
 PLATFORMS
   aarch64-linux-musl
