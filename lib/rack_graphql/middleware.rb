@@ -55,7 +55,7 @@ module RackGraphql
       [
         400,
         { 'Content-Type' => 'application/json', STATUS_CODE_HEADER_NAME => 400 },
-        [Oj.dump({})]
+        [JSON.dump({})]
       ]
     rescue StandardError, LoadError, SyntaxError => e
       # To respect the graphql spec, all errors need to be returned as json.
@@ -74,7 +74,7 @@ module RackGraphql
       [
         status_code,
         { 'Content-Type' => 'application/json', STATUS_CODE_HEADER_NAME => status_code },
-        [Oj.dump('errors' => [exception_hash(e)])]
+        [JSON.dump('errors' => [exception_hash(e)])]
       ]
     ensure
       request_epilogue.call
@@ -94,8 +94,8 @@ module RackGraphql
       payload = env['rack.input'].read.to_s
       return nil if payload.index(NULL_BYTE)
 
-      ::Oj.load(payload)
-    rescue Oj::ParseError
+      ::JSON.parse(payload)
+    rescue JSON::ParserError
       nil
     end
 
@@ -106,8 +106,8 @@ module RackGraphql
         return {} if ambiguous_param.empty?
 
         begin
-          ensure_hash(Oj.load(ambiguous_param))
-        rescue Oj::ParseError
+          ensure_hash(JSON.parse(ambiguous_param))
+        rescue JSON::ParserError
           raise AmbiguousParamError, "Unexpected parameter: #{ambiguous_param}"
         end
       when Hash
@@ -178,7 +178,7 @@ module RackGraphql
       else
         body = result.to_h
       end
-      Oj.dump(body)
+      JSON.dump(body)
     end
 
     def result_subscription?(result)

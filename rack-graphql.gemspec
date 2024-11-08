@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = Gem::Requirement.new('>= 3.2.0')
 
   spec.add_dependency 'graphql', '~> 2.0'
-  spec.add_dependency 'oj'
+  spec.add_dependency 'json', '>= 2.8.0'
   spec.add_dependency 'rack', '>= 2.2.6'
 end

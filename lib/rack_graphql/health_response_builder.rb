@@ -18,7 +18,7 @@ module RackGraphql
     end
 
     def body
-      Oj.dump(
+      JSON.dump(
         'status'     => 'ok',
         'request_ip' => request.ip,
         'app_name'   => app_name,

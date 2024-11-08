@@ -1,4 +1,4 @@
-require 'oj'
+require 'json'
 require 'rack'
 require 'graphql'
 

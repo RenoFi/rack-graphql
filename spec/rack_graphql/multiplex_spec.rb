@@ -23,7 +23,7 @@ RSpec.describe '/graphql request for multiplex execute', type: :request do
     end
 
     before do
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it do
@@ -42,7 +42,7 @@ RSpec.describe '/graphql request for multiplex execute', type: :request do
     end
 
     before do
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it do

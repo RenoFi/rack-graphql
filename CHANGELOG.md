@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 3.7.0 - 2024-11-08
+- use json gem 2.8+ instead of oj
+
 ## 3.6.0 - 2024-04-26
 - drop ruby 3.1 support
 - pass context.headers to the http reponse

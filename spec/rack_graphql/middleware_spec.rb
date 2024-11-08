@@ -3,7 +3,7 @@ RSpec.describe RackGraphql::Middleware do
     subject { described_class.new(schema: GraphQL::Schema, context_handler:, request_epilogue:).call(env) }
 
     let(:context_handler) { ->(env) { { bacon: 'steak', env: } } }
-    let(:env) { { 'rack.input' => instance_double(Rack::RewindableInput, read: Oj.dump({})), 'REQUEST_METHOD' => request_method } }
+    let(:env) { { 'rack.input' => instance_double(Rack::RewindableInput, read: JSON.dump({})), 'REQUEST_METHOD' => request_method } }
     let(:request_epilogue) { -> {} }
 
     describe 'non-POST request' do

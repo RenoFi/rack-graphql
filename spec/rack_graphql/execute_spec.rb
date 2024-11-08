@@ -18,7 +18,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'valid params' do
     before do
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it "responds with ok" do
@@ -35,13 +35,13 @@ RSpec.describe '/graphql request for regular execute', type: :request do
   describe 'custom execution error and return custom http status code' do
     before do
       expect(HealthResponseBuilder).to receive(:build).and_raise(TestUnauthorizedError.new("omg"))
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it do
       expect(last_response.status).to eq(403)
       expect(last_response.headers["x-http-status-code"]).to eq(403)
-      json_response = Oj.load(last_response.body)
+      json_response = JSON.parse(last_response.body)
       expect(json_response["errors"]).to be_a(Array)
       expect(json_response["errors"]).not_to be_empty
       expect(json_response["errors"].size).to eq(1)
@@ -53,13 +53,13 @@ RSpec.describe '/graphql request for regular execute', type: :request do
   describe 'catch custom exception and return custom http status code' do
     before do
       expect(HealthResponseBuilder).to receive(:build).and_raise(TestCustomError.new("omg"))
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it do
       expect(last_response.status).to eq(418)
       expect(last_response.headers["x-http-status-code"]).to eq(418)
-      json_response = Oj.load(last_response.body)
+      json_response = JSON.parse(last_response.body)
       expect(json_response["errors"]).to be_a(Array)
       expect(json_response["errors"]).not_to be_empty
       expect(json_response["errors"].size).to eq(1)
@@ -81,13 +81,13 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:keyword) { 'body care' }
 
     before do
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it 'responds successfully' do
       expect(last_response.status).to eq(200)
       expect(last_response.headers["x-http-status-code"]).to eq(200)
-      json_response = Oj.load(last_response.body)
+      json_response = JSON.parse(last_response.body)
 
       expect(json_response['data']['result']['products']).to eq(%w[Toothbrush Soap])
     end
@@ -110,12 +110,12 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     context 'when log_exception_backtrace is enabled by setter' do
       before do
         RackGraphql.log_exception_backtrace = true
-        post '/graphql', Oj.dump(params)
+        post '/graphql', JSON.dump(params)
       end
 
       it do
         expect(last_response.status).to eq(500)
-        json_response = Oj.load(last_response.body)
+        json_response = JSON.parse(last_response.body)
         expect(json_response["errors"]).to be_a(Array)
         expect(json_response["errors"]).not_to be_empty
         expect(json_response["errors"].size).to eq(1)
@@ -129,12 +129,12 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     context 'when log_exception_backtrace is enabled by env var' do
       before do
         ENV['RACK_GRAPHQL_LOG_EXCEPTION_BACKTRACE'] = 'true'
-        post '/graphql', Oj.dump(params)
+        post '/graphql', JSON.dump(params)
       end
 
       it do
         expect(last_response.status).to eq(500)
-        json_response = Oj.load(last_response.body)
+        json_response = JSON.parse(last_response.body)
         expect(json_response["errors"]).to be_a(Array)
         expect(json_response["errors"]).not_to be_empty
         expect(json_response["errors"].size).to eq(1)
@@ -148,12 +148,12 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     context 'when log_exception_backtrace is disabled' do
       before do
         RackGraphql.log_exception_backtrace = false
-        post '/graphql', Oj.dump(params)
+        post '/graphql', JSON.dump(params)
       end
 
       it do
         expect(last_response.status).to eq(500)
-        json_response = Oj.load(last_response.body)
+        json_response = JSON.parse(last_response.body)
         expect(json_response["errors"]).to be_a(Array)
         expect(json_response["errors"]).not_to be_empty
         expect(json_response["errors"].size).to eq(1)
@@ -169,7 +169,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:variables) { { foo: 'bar' } }
 
     before do
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it do
@@ -182,7 +182,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:variables) { '' }
 
     before do
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it do
@@ -195,7 +195,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:variables) { '!@#asdf' }
 
     before do
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it do
@@ -217,7 +217,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
     let(:variables) { 1 }
 
     before do
-      post '/graphql', Oj.dump(params)
+      post '/graphql', JSON.dump(params)
     end
 
     it do
@@ -227,7 +227,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'get request' do
     before do
-      get '/graphql', Oj.dump(params)
+      get '/graphql', JSON.dump(params)
     end
 
     it do
@@ -237,7 +237,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'put request' do
     before do
-      put '/graphql', Oj.dump(params)
+      put '/graphql', JSON.dump(params)
     end
 
     it do
@@ -247,7 +247,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'non-hash body' do
     before do
-      post '/graphql', Oj.dump('!asdf#')
+      post '/graphql', JSON.dump('!asdf#')
     end
 
     it do
@@ -267,7 +267,7 @@ RSpec.describe '/graphql request for regular execute', type: :request do
 
   describe 'empty params' do
     before do
-      post '/graphql', Oj.dump({})
+      post '/graphql', JSON.dump({})
     end
 
     it do

@@ -93,7 +93,7 @@ def app
 end
 
 def json_response
-  Oj.load(last_response.body)
+  JSON.parse(last_response.body)
 rescue
   puts last_response.inspect
   raise
