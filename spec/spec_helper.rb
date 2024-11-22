@@ -3,6 +3,7 @@ require 'pry'
 require 'rack-graphql'
 require 'rack/test'
 require 'ap'
+require 'ostruct'
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
