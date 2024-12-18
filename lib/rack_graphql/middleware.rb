@@ -16,7 +16,6 @@ module RackGraphql
       error_status_code_map: {},
       request_epilogue: -> {}
     )
-
       @schema = schema
       @app_name = app_name
       @context_handler = context_handler || ->(_) {}

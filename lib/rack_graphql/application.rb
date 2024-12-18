@@ -14,7 +14,6 @@ module RackGraphql
       error_status_code_map: {},
       request_epilogue: -> {}
     )
-
       ::Rack::Builder.new do
         map '/graphql' do
           run RackGraphql::Middleware.new(
