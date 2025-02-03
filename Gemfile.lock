@@ -64,7 +64,7 @@ GEM
       parser (>= 3.3.1.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (3.3.0)
+    rubocop-rspec (3.4.0)
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     unicode-display_width (3.1.4)
@@ -93,4 +93,4 @@ DEPENDENCIES
   rubocop-rspec
 
 BUNDLED WITH
-   2.5.23
+   2.6.3
