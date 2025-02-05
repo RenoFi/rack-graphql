@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 3.8.0 - 2025-02-05
+- Ruby 3.4 support. Drop ruby 3.2 support.
+
 ## 3.7.0 - 2024-11-08
 - use json gem 2.8+ instead of oj
 
