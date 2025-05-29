@@ -12,7 +12,8 @@ module RackGraphql
       health_on_root_path: health_route,
       root_path_app: nil,
       error_status_code_map: {},
-      request_epilogue: -> {}
+      request_epilogue: -> {},
+      secret_scrubber: nil
     )
       ::Rack::Builder.new do
         map '/graphql' do
@@ -25,6 +26,7 @@ module RackGraphql
             log_exception_backtrace:,
             error_status_code_map:,
             request_epilogue:,
+            secret_scrubber:
           )
         end
 

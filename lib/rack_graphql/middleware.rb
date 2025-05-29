@@ -14,7 +14,8 @@ module RackGraphql
       log_exception_backtrace: RackGraphql.log_exception_backtrace,
       re_raise_exceptions: false,
       error_status_code_map: {},
-      request_epilogue: -> {}
+      request_epilogue: -> {},
+      secret_scrubber: nil
     )
       @schema = schema
       @app_name = app_name
@@ -24,6 +25,7 @@ module RackGraphql
       @re_raise_exceptions = re_raise_exceptions
       @error_status_code_map = error_status_code_map
       @request_epilogue = request_epilogue || -> {}
+      @secret_scrubber = secret_scrubber || ->(value) { value }
     end
 
     def call(env)
@@ -37,7 +39,7 @@ module RackGraphql
       operation_name = params['operationName']
       context = context_handler.call(env)
 
-      log("Executing with params: #{params.inspect}, operationName: #{operation_name}, variables: #{variables.inspect}")
+      log("Executing with params: #{secret_scrubber.call(params)}, operationName: #{operation_name}, variables: #{secret_scrubber.call(variables)}")
       result = execute(params:, operation_name:, variables:, context:)
       status_code = response_status(result)
 
@@ -48,7 +50,7 @@ module RackGraphql
       ]
     rescue AmbiguousParamError => e
       exception_string = dump_exception(e)
-      log(exception_string)
+      log_error(exception_string)
       env[Rack::RACK_ERRORS].puts(exception_string)
       env[Rack::RACK_ERRORS].flush
       [
@@ -62,7 +64,7 @@ module RackGraphql
       # so they cannot be caught by error tracking rack middlewares.
       # You can change this behavior via `re_raise_exceptions` argument.
       exception_string = dump_exception(e)
-      log(exception_string)
+      log_error(exception_string)
 
       raise e if re_raise_exceptions
 
@@ -83,7 +85,7 @@ module RackGraphql
 
     attr_reader :schema, :app_name, :logger, :context_handler,
       :log_exception_backtrace, :error_status_code_map,
-      :re_raise_exceptions, :request_epilogue
+      :re_raise_exceptions, :request_epilogue, :secret_scrubber
 
     def post_request?(env)
       env['REQUEST_METHOD'] == 'POST'
@@ -187,9 +189,11 @@ module RackGraphql
     end
 
     def log(message)
-      return unless logger
+      logger&.info("[rack-graphql] #{message}")
+    end
 
-      logger.info("[rack-graphql] #{message}")
+    def log_error(message)
+      logger&.error("[rack-graphql] #{message}")
     end
 
     # Based on https://github.com/rack/rack/blob/master/lib/rack/show_exceptions.rb
