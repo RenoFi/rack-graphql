@@ -4,7 +4,7 @@ gemspec
 
 gem 'awesome_print'
 gem 'bundler'
-gem 'openssl'
+gem 'openssl', '~> 3.2'
 gem 'pry'
 gem 'rack-test'
 gem 'rake'
