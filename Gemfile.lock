@@ -24,7 +24,7 @@ GEM
     lint_roller (1.1.0)
     logger (1.7.0)
     method_source (1.1.0)
-    openssl (3.3.2)
+    openssl (4.0.0)
     parallel (1.27.0)
     parser (3.3.10.0)
       ast (~> 2.4.1)
@@ -90,7 +90,7 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   bundler
-  openssl (~> 3.2)
+  openssl (~> 4.0)
   pry
   rack-graphql!
   rack-test
