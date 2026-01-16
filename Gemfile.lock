@@ -120,7 +120,6 @@ DEPENDENCIES
   rack-graphql!
   rack-test
   rake
-  rdoc
   rspec
   rubocop
   rubocop-rake
