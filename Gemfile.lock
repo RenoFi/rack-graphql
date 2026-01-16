@@ -26,11 +26,12 @@ GEM
     logger (1.7.0)
     method_source (1.1.0)
     openssl (3.3.2)
+    ostruct (0.6.3)
     parallel (1.27.0)
-    parser (3.3.10.0)
+    parser (3.3.10.1)
       ast (~> 2.4.1)
       racc
-    prism (1.7.0)
+    prism (1.8.0)
     pry (0.16.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -95,6 +96,7 @@ DEPENDENCIES
   awesome_print
   bundler
   openssl (~> 3.2)
+  ostruct
   pry
   rack-graphql!
   rack-test
