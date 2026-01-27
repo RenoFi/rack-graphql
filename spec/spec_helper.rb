@@ -24,8 +24,11 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods, type: :request
 end
 
-TestUnauthorizedError = Class.new(StandardError)
-TestCustomError = Class.new(StandardError)
+class TestUnauthorizedError < StandardError
+end
+
+class TestCustomError < StandardError
+end
 
 class HealthResponseBuilder
   def self.build
