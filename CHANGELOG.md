@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 3.10.0 - 2026-01-27
+- Ruby 4.0 support. Drop ruby 3.3 support.
+
 ## 3.9.0 - 2025-05-29
 - Ability to provide secret scrubber, so sensitive values are not logged
 
