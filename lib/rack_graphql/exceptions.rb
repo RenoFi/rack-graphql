@@ -1,4 +1,3 @@
 module RackGraphql
-  class AmbiguousParamError < ArgumentError
-  end
+  AmbiguousParamError = Class.new(ArgumentError)
 end
