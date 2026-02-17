@@ -2,7 +2,7 @@ module RackGraphql
   class Application
     def self.call(
       schema:,
-      app_name: 'rack-graphql-service',
+      app_name: "rack-graphql-service",
       logger: nil,
       context_handler: nil,
       re_raise_exceptions: false,
@@ -16,7 +16,7 @@ module RackGraphql
       secret_scrubber: nil
     )
       ::Rack::Builder.new do
-        map '/graphql' do
+        map "/graphql" do
           run RackGraphql::Middleware.new(
             app_name:,
             schema:,
@@ -31,21 +31,21 @@ module RackGraphql
         end
 
         if health_route
-          map '/health' do
+          map "/health" do
             run ->(env) { health_response_builder.new(app_name:, env:).build }
           end
 
-          map '/healthz' do
+          map "/healthz" do
             run ->(env) { health_response_builder.new(app_name:, env:).build }
           end
         end
 
         if root_path_app
-          map '/' do
+          map "/" do
             run root_path_app
           end
         elsif health_on_root_path
-          map '/' do
+          map "/" do
             run ->(env) { health_response_builder.new(app_name:, env:).build }
           end
         end

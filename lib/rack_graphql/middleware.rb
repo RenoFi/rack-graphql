@@ -2,8 +2,8 @@ module RackGraphql
   class Middleware
     DEFAULT_STATUS_CODE = 200
     DEFAULT_ERROR_STATUS_CODE = 500
-    STATUS_CODE_HEADER_NAME = 'X-Http-Status-Code'.freeze
-    SUBSCRIPTION_ID_HEADER_NAME = 'X-Subscription-ID'.freeze
+    STATUS_CODE_HEADER_NAME = "X-Http-Status-Code".freeze
+    SUBSCRIPTION_ID_HEADER_NAME = "X-Subscription-ID".freeze
     NULL_BYTE = '\u0000'.freeze
 
     def initialize(
@@ -35,8 +35,8 @@ module RackGraphql
 
       return [400, {}, []] unless params.is_a?(Hash)
 
-      variables = ensure_hash(params['variables'])
-      operation_name = params['operationName']
+      variables = ensure_hash(params["variables"])
+      operation_name = params["operationName"]
       context = context_handler.call(env)
 
       log("Executing with params: #{secret_scrubber.call(params)}, operationName: #{operation_name}, variables: #{secret_scrubber.call(variables)}")
@@ -55,7 +55,7 @@ module RackGraphql
       env[Rack::RACK_ERRORS].flush
       [
         400,
-        { 'Content-Type' => 'application/json', STATUS_CODE_HEADER_NAME => 400 },
+        {"Content-Type" => "application/json", STATUS_CODE_HEADER_NAME => 400},
         [JSON.dump({})]
       ]
     rescue StandardError, LoadError, SyntaxError => e
@@ -74,8 +74,8 @@ module RackGraphql
       status_code = error_status_code_map[e.class] || DEFAULT_ERROR_STATUS_CODE
       [
         status_code,
-        { 'Content-Type' => 'application/json', STATUS_CODE_HEADER_NAME => status_code },
-        [JSON.dump('errors' => [exception_hash(e)])]
+        {"Content-Type" => "application/json", STATUS_CODE_HEADER_NAME => status_code},
+        [JSON.dump("errors" => [exception_hash(e)])]
       ]
     ensure
       request_epilogue.call
@@ -88,11 +88,11 @@ module RackGraphql
       :re_raise_exceptions, :request_epilogue, :secret_scrubber
 
     def post_request?(env)
-      env['REQUEST_METHOD'] == 'POST'
+      env["REQUEST_METHOD"] == "POST"
     end
 
     def post_data(env)
-      payload = env['rack.input'].read.to_s
+      payload = env["rack.input"].read.to_s
       return nil if payload.index(NULL_BYTE)
 
       ::JSON.parse(payload)
@@ -122,9 +122,9 @@ module RackGraphql
 
     def execute(params:, operation_name:, variables:, context:)
       if valid_multiplex?(params)
-        execute_multi(params['_json'], operation_name:, variables:, context:)
+        execute_multi(params["_json"], operation_name:, variables:, context:)
       else
-        execute_single(params['query'], operation_name:, variables:, context:)
+        execute_single(params["query"], operation_name:, variables:, context:)
       end
     end
 
@@ -133,13 +133,13 @@ module RackGraphql
     end
 
     def valid_multiplex?(params)
-      params['_json'].is_a?(Array) && params['_json'].all? { |j| j.is_a?(Hash) }
+      params["_json"].is_a?(Array) && params["_json"].all? { |j| j.is_a?(Hash) }
     end
 
     def execute_multi(queries_params, operation_name:, variables:, context:)
       queries = queries_params.map do |param|
         {
-          query: param['query'],
+          query: param["query"],
           operation_name:,
           variables:,
           context:
@@ -150,7 +150,7 @@ module RackGraphql
     end
 
     def response_headers(result = nil, status_code: DEFAULT_STATUS_CODE)
-      headers = { STATUS_CODE_HEADER_NAME => status_code }
+      headers = {STATUS_CODE_HEADER_NAME => status_code}
       headers[SUBSCRIPTION_ID_HEADER_NAME] = result.context[:subscription_id] if result_subscription?(result)
       result_collection = result.is_a?(Array) ? result : [result]
       result_collection.each do |part|
@@ -205,9 +205,9 @@ module RackGraphql
 
     def exception_hash(exception)
       {
-        'app_name' => app_name,
-        'message' => "#{exception.class}: #{exception.message}",
-        'backtrace' => log_exception_backtrace ? exception.backtrace : "[FILTERED]"
+        "app_name" => app_name,
+        "message" => "#{exception.class}: #{exception.message}",
+        "backtrace" => log_exception_backtrace ? exception.backtrace : "[FILTERED]"
       }
     end
   end

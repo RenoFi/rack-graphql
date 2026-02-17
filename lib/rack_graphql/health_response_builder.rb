@@ -14,17 +14,17 @@ module RackGraphql
     attr_reader :app_name, :request
 
     def headers
-      { 'Content-Type' => 'application/json' }
+      {"Content-Type" => "application/json"}
     end
 
     def body
       JSON.dump(
-        'status'     => 'ok',
-        'request_ip' => request.ip,
-        'app_name'   => app_name,
-        'app_env'    => ENV['RACK_ENV'],
-        'host'       => ENV['HOSTNAME'],
-        'revision'   => ENV['REVISION']
+        "status" => "ok",
+        "request_ip" => request.ip,
+        "app_name" => app_name,
+        "app_env" => ENV["RACK_ENV"],
+        "host" => ENV["HOSTNAME"],
+        "revision" => ENV["REVISION"]
       )
     end
   end
