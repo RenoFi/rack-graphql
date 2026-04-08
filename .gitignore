@@ -12,3 +12,4 @@
 
 # Cached rubocop config files
 .rubocop-*
+.claude
