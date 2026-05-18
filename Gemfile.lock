@@ -17,7 +17,7 @@ GEM
     diff-lcs (1.6.2)
     erb (6.0.4)
     fiber-storage (1.0.1)
-    graphql (2.6.1)
+    graphql (2.6.2)
       base64
       fiber-storage
       logger
@@ -32,7 +32,7 @@ GEM
     lint_roller (1.1.0)
     logger (1.7.0)
     method_source (1.1.0)
-    openssl (4.0.1)
+    openssl (4.0.2)
     ostruct (0.6.3)
     parallel (1.28.0)
     parser (3.3.11.1)
